@@ -1,16 +1,20 @@
 import json
 import itertools
+import random
 
-def matchBounds(lowerBound: int, upperBound: int, nutrientDict: dict, mealAmnt: int):
+def matchBounds(lowerBound: int, upperBound: int, nutrientDict: dict, mealAmnt: int, totalDays: int):
     '''Matches a users requirements as an upper and lower bound to items who's sum match it'''
-    nutrientValList = list(map(int, list(nutrientDict.values())))
+    #nutrientValList = list(map(int, list(nutrientDict.values())))
+    nutrientValList = list(nutrientDict.values())
+    nutrientKeyList = list(nutrientDict.keys())
     matchedList = []
-    for req in range(lowerBound, upperBound):
-        for i in itertools.combinations(nutrientValList, mealAmnt):
-            if sum(i) == req:
-                matchedList.append(i)
 
-    return matchedList
+    for req in range(lowerBound, upperBound):
+       for i, j in zip(itertools.combinations(nutrientDict.items(), mealAmnt), itertools.combinations(nutrientValList, mealAmnt)):
+            if sum(j) == req:
+                matchedList.append(i)
+                if len(matchedList) == totalDays:
+                    return matchedList
 
 def defNutrients():
     '''Returns dictionaries for each nutrient, with each food and its respective content'''
@@ -26,19 +30,20 @@ def defNutrients():
             x = food[loop].get("nutrition").get(nutrient)
             if x == None:
                 x = 0
-            x = float(str(x).strip(" g"))
+            x = float(str(x).strip("g"))
             name = food[loop].get("name")
 
             nutrient_dict[name] = x
     return dictsList 
 
-# TODO print name of food with value
-
 if __name__ == '__main__':
-    kcalValList = list(map(int, list(defNutrients()[0].values())))
-    kcalNameList = list(defNutrients()[0].keys())
-    kcalList = list(defNutrients()[0].keys())
-    kcalDict = defNutrients()[0]
-    kcalDict = dict(itertools.islice(kcalDict.items(), 2))
-    
-    print(matchBounds(int(input("Lower bound: ")), int(input("Upper bound: ")), kcalDict, 3))
+    n = defNutrients()[0].items()
+    l = list(n)
+    random.shuffle(l)
+    shuffledDict = dict(l)
+
+    nutrientDict = dict(itertools.islice(shuffledDict.items(), 20))
+    #kcalDict = dict(itertools.islice(defNutrients()[2].items(), 20))
+        
+    print(matchBounds(int(input("Lower bound: ")), int(input("Upper bound: ")), nutrientDict, int(input("Meals per day: ")), int(input("Total days: "))))
+    #print(matchBounds(0, 800, nutrientDict, 3, 7))

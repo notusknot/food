@@ -2,9 +2,19 @@ import json
 import itertools
 import random
 from pprint import pprint
+import time
+
+
+function matchBounds(lowerBound, upperBound, nutrientObj, mealAmnt, totalDays) {
+    nutrientValList = Object.values(nutrientObj)
+    nutrientKeyList = Object.keys(nutrientObj)
+    matchedList = []
+    for (let req = lowerBound; i < upperBound; i++){
+        for (let comboTuple in )
+    }
+}
 
 def matchBounds(lowerBound: int, upperBound: int, nutrientDict: dict, mealAmnt: int, totalDays: int):
-    '''Matches a users requirements as an upper and lower bound to items who's sum match it'''
     #nutrientValList = list(map(int, list(nutrientDict.values())))
     nutrientValList = list(nutrientDict.values())
     nutrientKeyList = list(nutrientDict.keys())
@@ -13,6 +23,7 @@ def matchBounds(lowerBound: int, upperBound: int, nutrientDict: dict, mealAmnt: 
     for req in range(lowerBound, upperBound):
         for comboTuple, j in zip(itertools.combinations(nutrientDict.items(), mealAmnt), itertools.combinations(nutrientValList, mealAmnt)):
             for loop in comboTuple:
+                print(loop)
                 nutrientDict.pop(loop[0], None)
 
             if sum(j) == req:

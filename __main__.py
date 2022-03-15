@@ -5,22 +5,31 @@ from pprint import pprint
 
 def matchBounds(lowerBound: int, upperBound: int, nutrientDict: dict, mealAmnt: int, totalDays: int):
     '''Matches a users requirements as an upper and lower bound to items who's sum match it'''
-    #nutrientValList = list(map(int, list(nutrientDict.values())))
-    nutrientValList = list(nutrientDict.values())
-    nutrientKeyList = list(nutrientDict.keys())
     matchedList = []
-
     for req in range(lowerBound, upperBound):
-        for comboTuple, j in zip(itertools.combinations(nutrientDict.items(), mealAmnt), itertools.combinations(nutrientValList, mealAmnt)):
+        # All the food you chose
+        chosen = []
+
+        # Unique food for the day 
+        uniqueCombos = []
+        j = []
+        for comboTuple in itertools.combinations(nutrientDict.items(), mealAmnt):
             for loop in comboTuple:
-                nutrientDict.pop(loop[0], None)
+                if loop not in uniqueCombos and loop not in chosen:
+                    uniqueCombos.append(loop)
+                    j.append(int(loop[1]))
+
+            if len(uniqueCombos) < mealAmnt:
+                continue
 
             if sum(j) == req:
-                matchedList.append(comboTuple)
-
-
+                matchedList.append(uniqueCombos)
+                chosen += uniqueCombos
                 if len(matchedList) == totalDays:
                     return matchedList
+
+            uniqueCombos = []
+            j = []       
 
 def defNutrients():
     '''Returns dictionaries for each nutrient, with each food and its respective content'''
@@ -28,13 +37,13 @@ def defNutrients():
     nutrientList = ["kcal", "fat", "saturates", "carbs", "sugars", "protein", "fibre", "salt"]
     dictsList = [kcalDict, fatDict, saturatesDict, carbsDict, sugarsDict, proteinDict, fiberDict, saltDict]
 
-    with open ("food.json", "r", encoding="utf-8") as jsonFile:
+    with open ("./food.json", "r") as jsonFile:
         food = json.load(jsonFile)
 
     for nutrient, nutrient_dict in zip(nutrientList, dictsList):
         for loop in range(len(food)):
             x = food[loop].get("nutrition").get(nutrient)
-            if x == None:
+            if x is None:
                 x = 0
             x = float(str(x).strip("g"))
             name = food[loop].get("name")
@@ -48,9 +57,7 @@ if __name__ == '__main__':
     random.shuffle(l)
     shuffledDict = dict(l)
 
-    #nutrientDict = dict(itertools.islice(shuffledDict.items(), 20))
     nutrientDict = dict(shuffledDict.items())
-    #kcalDict = dict(itertools.islice(defNutrients()[2].items(), 20))
         
     #pprint(matchBounds(int(input("Lower bound: ")), int(input("Upper bound: ")), nutrientDict, int(input("Meals per day: ")), int(input("Total days: "))))
     pprint(matchBounds(2000, 2200, nutrientDict, 3, 7))

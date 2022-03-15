@@ -9,7 +9,7 @@
   outputs = { self, nixpkgs, utils }: (utils.lib.eachSystem ["x86_64-linux" ] (system: rec {
 
     packages = {
-      pythonEnv = nixpkgs.legacyPackages.${system}.python3.withPackages(ps: with ps; [ numpy ]);
+      pythonEnv = nixpkgs.legacyPackages.${system}.python3.withPackages(ps: with ps; [ pscript]);
     };
 
     defaultPackage = packages.pythonEnv; # If you want to juist build the environment

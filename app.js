@@ -1,67 +1,104 @@
-import json
-import itertools
-import random
-from pprint import pprint
-import time
+// Get DOM elements
+const form  = document.querySelector('form');
+const input = document.querySelector("[name='todo']");
+const todoList = document.getElementById('todos');
+
+// Side Effects / Lifecycle
+const existingTodos = JSON.parse(localStorage.getItem('todos')) || [];
+
+const todoData = [];
+
+existingTodos.forEach(todo => {
+    addTodo(todo);
+});
 
 
-function matchBounds(lowerBound, upperBound, nutrientObj, mealAmnt, totalDays) {
-    nutrientValList = Object.values(nutrientObj)
-    nutrientKeyList = Object.keys(nutrientObj)
-    matchedList = []
-    for (let req = lowerBound; i < upperBound; i++){
-        for (let comboTuple in )
+function addTodo(todoText) {
+    todoData.push(todoText);
+    const li = document.createElement('li')
+    li.innerHTML = todoText;
+    todoList.appendChild(li);
+    localStorage.setItem('todos', JSON.stringify(todoData));
+    input.value = ''
+}
+
+function* range(start, end) {
+    for (; start <= end; ++start) { yield start; }
+}
+
+function last(arr) { return arr[arr.length - 1]; }
+
+function* numericCombinations(n, r, loc = []) {
+    const idx = loc.length;
+    if (idx === r) {
+        yield loc;
+        return;
+    }
+    for (let next of range(idx ? last(loc) + 1 : 0, n - r + idx)) { yield* numericCombinations(n, r, loc.concat(next)); }
+}
+
+function* combinations(arr, r) {
+    for (let idxs of numericCombinations(arr.length, r)) { yield idxs.map(i => arr[i]); }
+}
+
+/*
+def combinations (r) {
+        let arr = this.toArray(),
+            len = toPositiveInteger(r),
+            res = [];
+
+        return new Iter(function* gen(idx = 0, start = 0) {
+            if (idx >= len) {
+                yield res.slice();
+                return;
+            }
+            for (let i = start, l = arr.length; i < l; i++) {
+                res[idx] = arr[i];
+                yield* gen(idx + 1, i + 1);
+            }
+        });
+    }
+*/
+function matchBounds(targetNum, nutrientObj, mealAmnt, totalDays) {
+/*    matchedList = []
+    chosen = []
+    uniqueCombos = []
+    j = []*/
+
+    for (let combo = 0; combo < combinations(nutrientObj.values(), mealAmnt); combo++ ) {
+        console.log(combo)
+        console.log(nutrientObj)
+        /*for loop in comboTuple:
+            if loop not in uniqueCombos and loop not in chosen:
+                uniqueCombos.append(loop)
+                j.append(int(loop[1]))
+
+        if len(uniqueCombos) < mealAmnt:
+            continue
+
+        if sum(j) == req:
+            matchedList.append(uniqueCombos)
+            chosen += uniqueCombos
+            if len(matchedList) == totalDays:
+                return matchedList
+
+        uniqueCombos = []
+        j = []*/
     }
 }
 
-def matchBounds(lowerBound: int, upperBound: int, nutrientDict: dict, mealAmnt: int, totalDays: int):
-    #nutrientValList = list(map(int, list(nutrientDict.values())))
-    nutrientValList = list(nutrientDict.values())
-    nutrientKeyList = list(nutrientDict.keys())
-    matchedList = []
 
-    for req in range(lowerBound, upperBound):
-        for comboTuple, j in zip(itertools.combinations(nutrientDict.items(), mealAmnt), itertools.combinations(nutrientValList, mealAmnt)):
-            for loop in comboTuple:
-                print(loop)
-                nutrientDict.pop(loop[0], None)
+fetch("./food.json")
+.then(response => { return response.json(); })
 
-            if sum(j) == req:
-                matchedList.append(comboTuple)
+.then(data => console.log(data));
+
+// Events
+form.onsubmit = (event) => {
+    event.preventDefault();
+    addTodo(input.value);
+    print(jsonObject)
+    /*matchBounds()*/
+}
 
 
-                if len(matchedList) == totalDays:
-                    return matchedList
-
-def defNutrients():
-    '''Returns dictionaries for each nutrient, with each food and its respective content'''
-    kcalDict, fatDict, saturatesDict, carbsDict, sugarsDict, proteinDict, fiberDict, saltDict = {}, {}, {}, {}, {}, {}, {}, {}
-    nutrientList = ["kcal", "fat", "saturates", "carbs", "sugars", "protein", "fibre", "salt"]
-    dictsList = [kcalDict, fatDict, saturatesDict, carbsDict, sugarsDict, proteinDict, fiberDict, saltDict]
-
-    with open ("food.json", "r", encoding="utf-8") as jsonFile:
-        food = json.load(jsonFile)
-
-    for nutrient, nutrient_dict in zip(nutrientList, dictsList):
-        for loop in range(len(food)):
-            x = food[loop].get("nutrition").get(nutrient)
-            if x == None:
-                x = 0
-            x = float(str(x).strip("g"))
-            name = food[loop].get("name")
-
-            nutrient_dict[name] = x
-    return dictsList 
-
-if __name__ == '__main__':
-    n = defNutrients()[0].items()
-    l = list(n)
-    random.shuffle(l)
-    shuffledDict = dict(l)
-
-    #nutrientDict = dict(itertools.islice(shuffledDict.items(), 20))
-    nutrientDict = dict(shuffledDict.items())
-    #kcalDict = dict(itertools.islice(defNutrients()[2].items(), 20))
-        
-    #pprint(matchBounds(int(input("Lower bound: ")), int(input("Upper bound: ")), nutrientDict, int(input("Meals per day: ")), int(input("Total days: "))))
-    pprint(matchBounds(2000, 2200, nutrientDict, 3, 7))

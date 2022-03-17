@@ -2,47 +2,7 @@ import json
 import itertools
 import random
 from pprint import pprint
-'''
-def matchBounds(boundsList: list, mealAmnt: int, totalDays: int):
-    for loop in boundsList:
-        lowerBound = loop[0]
-        upperBound = loop[1]
 
-        n = defNutrients()[loop[2]].items()
-        l = list(n)
-        random.shuffle(l)
-        shuffledDict = dict(l)
-
-        nutrientDict = dict(shuffledDict.items())
-
-        matchedList = []
-        for req in range(lowerBound, upperBound):
-            # All the food you chose
-            chosen = []
-
-            # Unique food for the day 
-            uniqueCombos = []
-            j = []
-            for comboTuple in itertools.combinations(nutrientDict.items(), mealAmnt):
-                for loop in comboTuple:
-                    if loop not in uniqueCombos and loop not in chosen:
-                        uniqueCombos.append(loop)
-                        j.append(int(loop[1]))
-
-                if len(uniqueCombos) < mealAmnt:
-                    continue
-
-                if sum(j) == req:
-                    matchedList.append(uniqueCombos)
-                    chosen += uniqueCombos
-                    if len(matchedList) == totalDays:
-                        return matchedList
-
-                uniqueCombos = []
-                j = []       
-
-        return matchedList
-'''
 def matchBounds(boundsList, nutrientDict, mealAmnt: int, totalDays: int):
     lowerBound = boundsList[0][0]
     upperBound = boundsList[0][1]

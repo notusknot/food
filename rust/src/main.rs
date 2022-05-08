@@ -37,24 +37,6 @@ fn get_args() -> (i32, i32, usize, usize) {
     return (*low, *up, *meals, *days);
 }
 
-//fn fake_def_nutrients() -> Vec<i32> {
-//    let mut nutrient_vec = vec![];
-//    for req in 550..600 {
-//        nutrient_vec.push(req);
-//    }
-//
-//    // Iterate from middle out
-//    fn cycle<T>(slice: &[T], start_pos: usize) -> impl Iterator<Item = &T> {
-//        slice.iter().cycle().skip(start_pos).take(slice.len())
-//    }
-//
-//    let nutrient_vec = cycle(&nutrient_vec, nutrient_vec.len() / 3)
-//        .copied()
-//        .collect::<Vec<_>>();
-//
-//    nutrient_vec
-//}
-
 #[derive(Debug)]
 struct FoodStruct {
     name: String,
@@ -75,7 +57,7 @@ struct FoodStruct {
     img_url: String,
 }
 
-fn nutrient_names_owned(kcal: &[FoodStruct]) -> Vec<i32> {
+fn get_nutrient_from_struct(kcal: &[FoodStruct]) -> Vec<i32> {
     kcal.iter().map(|p| p.kcal.clone()).collect()
 }
 
@@ -116,7 +98,7 @@ fn main() -> Result<()> {
     println!(
         "{:?}",
         match_bounds(
-            nutrient_names_owned(&nutrient_vec),
+            get_nutrient_from_struct(&nutrient_vec),
             lower_bound,
             upper_bound,
             meal_amnt,

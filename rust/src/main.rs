@@ -113,7 +113,16 @@ fn main() -> Result<()> {
     let upper_bound = get_args().1;
     let meal_amnt = get_args().2;
     let total_days = get_args().3;
-    println!("{:?}", match_bounds(nutrient_names_owned(&nutrient_vec), lower_bound, upper_bound, meal_amnt, total_days));
+    println!(
+        "{:?}",
+        match_bounds(
+            nutrient_names_owned(&nutrient_vec),
+            lower_bound,
+            upper_bound,
+            meal_amnt,
+            total_days
+        )
+    );
 
     Ok(())
 }

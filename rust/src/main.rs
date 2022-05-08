@@ -1,9 +1,15 @@
 use itertools::Itertools;
-use std::env;
 use rusqlite::{params, Connection, Result};
+use std::env;
 
 // thank you to Candy Corvid#0137 for helping me with this!
-fn match_bounds(nutrient_vec: Vec<i32>, lower_bound: i32, upper_bound: i32, meal_amnt: usize, total_days: usize) -> Vec<Vec<i32>> {
+fn match_bounds(
+    nutrient_vec: Vec<i32>,
+    lower_bound: i32,
+    upper_bound: i32,
+    meal_amnt: usize,
+    total_days: usize,
+) -> Vec<Vec<i32>> {
     let mut matched_list: Vec<Vec<i32>> = vec![];
 
     for combo_arr in nutrient_vec.into_iter().combinations(meal_amnt) {
@@ -12,7 +18,7 @@ fn match_bounds(nutrient_vec: Vec<i32>, lower_bound: i32, upper_bound: i32, meal
         if (lower_bound..upper_bound).contains(&sum) {
             matched_list.push(combo_arr.clone());
             if matched_list.len() == total_days {
-                return matched_list
+                return matched_list;
             }
         }
     }
@@ -22,11 +28,11 @@ fn match_bounds(nutrient_vec: Vec<i32>, lower_bound: i32, upper_bound: i32, meal
 
 fn fake_def_nutrients() -> Vec<i32> {
     let mut nutrient_vec = vec![];
-    for req in 550..600{
+    for req in 550..600 {
         nutrient_vec.push(req);
     }
 
-    // Iterate from middle out 
+    // Iterate from middle out
     fn cycle<T>(slice: &[T], start_pos: usize) -> impl Iterator<Item = &T> {
         slice.iter().cycle().skip(start_pos).take(slice.len())
     }
@@ -46,9 +52,8 @@ fn get_args() -> (i32, i32, usize, usize) {
     let meals = &args[3].parse::<usize>().unwrap();
     let days = &args[4].parse::<usize>().unwrap();
 
-    return (*low, *up, *meals, *days)
+    return (*low, *up, *meals, *days);
 }
-
 
 #[derive(Debug)]
 struct FoodStruct {
@@ -67,7 +72,7 @@ struct FoodStruct {
     method: String,
     difficulty: String,
     servings: i32,
-    img_url: String
+    img_url: String,
 }
 
 fn def_nutrients() -> Result<()> {
@@ -75,32 +80,32 @@ fn def_nutrients() -> Result<()> {
     let mut nutrient_vec: Vec<FoodStruct> = vec![];
 
     let mut stmt = conn.prepare("SELECT * FROM foodList")?;
-        let person_iter = stmt.query_map([], |row| {
-            Ok(FoodStruct {
-                name: row.get(0)?,
-                description: row.get(1)?,
-                author: row.get(2)?,
-                kcal: row.get(3)?,
-                fat: row.get(4)?,
-                saturates: row.get(5)?,
-                carbs: row.get(6)?,
-                sugars: row.get(7)?,
-                fibre: row.get(8)?,
-                protein: row.get(9)?,
-                salt: row.get(10)?,
-                ingredients: row.get(11)?,
-                method: row.get(12)?,
-                difficulty: row.get(13)?,
-                servings: row.get(14)?,
-                img_url: row.get(15)?,
-            })
-        })?;
+    let person_iter = stmt.query_map([], |row| {
+        Ok(FoodStruct {
+            name: row.get(0)?,
+            description: row.get(1)?,
+            author: row.get(2)?,
+            kcal: row.get(3)?,
+            fat: row.get(4)?,
+            saturates: row.get(5)?,
+            carbs: row.get(6)?,
+            sugars: row.get(7)?,
+            fibre: row.get(8)?,
+            protein: row.get(9)?,
+            salt: row.get(10)?,
+            ingredients: row.get(11)?,
+            method: row.get(12)?,
+            difficulty: row.get(13)?,
+            servings: row.get(14)?,
+            img_url: row.get(15)?,
+        })
+    })?;
 
     for person in person_iter {
-        nutrient_vec.push(person.as_ref().unwrap());
-        println!("{:?}", person.unwrap());
+        //nutrient_vec.push(person.as_ref().unwrap());
+        //println!("{:?}", person.unwrap());
     }
-    println!("{:?}", nutrient_vec);
+    //println!("{:?}", nutrient_vec);
     Ok(())
 }
 

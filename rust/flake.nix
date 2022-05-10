@@ -19,7 +19,7 @@
       {
         devShell = mkShell {
           buildInputs = [
-            rust-analyzer rustfmt hyperfine cargo-bloat sqlite
+            clippy rust-analyzer rustfmt hyperfine cargo-bloat sqlite
             rust-bin.nightly.latest.default
           ];
         };

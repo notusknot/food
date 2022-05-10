@@ -26,8 +26,22 @@ fn match_bounds(
     matched_list
 }
 
+//fn match_bounds(
+//    nutrient_vec: Vec<i32>,
+//    lower_bound: i32,
+//    upper_bound: i32,
+//    meal_amnt: usize,
+//    total_days: usize,
+//) -> Vec<Vec<i32>> {
+//    nutrient_vec.iter().combinations(meal_amnt).filter(|combo_arr| {
+//      let sum: i32 = combo_arr.iter().map(|x| **x).sum();
+//      return (lower_bound..upper_bound).contains(&sum);
+//    }).take(meal_amnt).collect()
+//}
+
 fn get_args() -> (i32, i32, usize, usize) {
     let args: Vec<String> = env::args().collect();
+    println!("{:?}", args);
 
     let low = &args[1].parse::<i32>().unwrap();
     let up = &args[2].parse::<i32>().unwrap();
@@ -37,7 +51,7 @@ fn get_args() -> (i32, i32, usize, usize) {
     return (*low, *up, *meals, *days);
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 struct FoodStruct {
     name: String,
     description: String,
@@ -57,13 +71,8 @@ struct FoodStruct {
     img_url: String,
 }
 
-fn get_nutrient_from_struct(kcal: &[FoodStruct]) -> Vec<i32> {
-    kcal.iter().map(|p| p.kcal.clone()).collect()
-}
-
 fn main() -> Result<()> {
     let conn = Connection::open("food.db")?;
-    let mut nutrient_vec: Vec<FoodStruct> = vec![];
 
     let mut stmt = conn.prepare("SELECT * FROM foodList")?;
     let food_iter = stmt.query_map([], |row| {
@@ -87,24 +96,39 @@ fn main() -> Result<()> {
         })
     })?;
 
-    for item in food_iter {
-        nutrient_vec.push(item.unwrap());
+    // Get nutrient vector
+    //let nutrient_vec = food_iter.map(|x| x.unwrap()).collect::<Vec<_>>();
+    let nutrient_vec = food_iter.collect::<Vec<_>>();
+    
+    let mut tuple_vec: Vec<(String, i32)> = vec![];
+
+    let length = nutrient_vec.len();
+    for nutrient_iterator in 0..length {
+        //println!("{:?}", (nutrient_vec[nutrient_iterator].as_ref(), nutrient_vec[nutrient_iterator]));
+        tuple_vec.push((
+            nutrient_vec[nutrient_iterator].clone().unwrap().name,
+            nutrient_vec[nutrient_iterator].clone().unwrap().kcal
+        ));
+        //tuple_vec.push((nutrient_vec[nutrient_iterator].name.clone(), nutrient_vec[nutrient_iterator].kcal));
     }
 
-    let lower_bound = get_args().0;
-    let upper_bound = get_args().1;
-    let meal_amnt = get_args().2;
-    let total_days = get_args().3;
-    println!(
-        "{:?}",
-        match_bounds(
-            get_nutrient_from_struct(&nutrient_vec),
-            lower_bound,
-            upper_bound,
-            meal_amnt,
-            total_days
-        )
-    );
+    //println!("{:?}", tuple_vec);
+    //println!("{:?}", nutrient_vec);
+
+    //let (lower_bound, upper_bound, meal_amnt, total_days) = get_args();
+
+    //println!(
+    //    "{:?}",
+    //    match_bounds(
+    //        get_nutrient_from_struct(&nutrient_vec),
+    //        lower_bound,
+    //        upper_bound,
+    //        meal_amnt,
+    //        total_days
+    //    )
+    //);
 
     Ok(())
 }
+
+

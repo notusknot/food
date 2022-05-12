@@ -2,55 +2,6 @@ use itertools::Itertools;
 use rusqlite::{Connection, Result};
 use std::env;
 
-// thank you to Candy Corvid#0137 for helping me with this!
-fn match_bounds(
-    nutrient_vec: Vec<i32>,
-    lower_bound: i32,
-    upper_bound: i32,
-    meal_amnt: usize,
-    total_days: usize,
-) -> Vec<Vec<i32>> {
-    let mut matched_list: Vec<Vec<i32>> = vec![];
-
-    for combo_arr in nutrient_vec.into_iter().combinations(meal_amnt) {
-        let sum: i32 = combo_arr.iter().sum();
-
-        if (lower_bound..upper_bound).contains(&sum) {
-            matched_list.push(combo_arr.clone());
-            if matched_list.len() == total_days {
-                return matched_list;
-            }
-        }
-    }
-
-    matched_list
-}
-
-//fn match_bounds(
-//    nutrient_vec: Vec<i32>,
-//    lower_bound: i32,
-//    upper_bound: i32,
-//    meal_amnt: usize,
-//    total_days: usize,
-//) -> Vec<Vec<i32>> {
-//    nutrient_vec.iter().combinations(meal_amnt).filter(|combo_arr| {
-//      let sum: i32 = combo_arr.iter().map(|x| **x).sum();
-//      return (lower_bound..upper_bound).contains(&sum);
-//    }).take(meal_amnt).collect()
-//}
-
-fn get_args() -> (i32, i32, usize, usize) {
-    let args: Vec<String> = env::args().collect();
-    println!("{:?}", args);
-
-    let low = &args[1].parse::<i32>().unwrap();
-    let up = &args[2].parse::<i32>().unwrap();
-    let meals = &args[3].parse::<usize>().unwrap();
-    let days = &args[4].parse::<usize>().unwrap();
-
-    return (*low, *up, *meals, *days);
-}
-
 #[derive(Clone, Debug)]
 struct FoodStruct {
     name: String,
@@ -71,7 +22,7 @@ struct FoodStruct {
     img_url: String,
 }
 
-fn main() -> Result<()> {
+fn def_nutrients() -> Result<Vec<(String, i32)>> {
     let conn = Connection::open("food.db")?;
 
     let mut stmt = conn.prepare("SELECT * FROM foodList")?;
@@ -97,38 +48,65 @@ fn main() -> Result<()> {
     })?;
 
     // Get nutrient vector
-    //let nutrient_vec = food_iter.map(|x| x.unwrap()).collect::<Vec<_>>();
     let nutrient_vec = food_iter.collect::<Vec<_>>();
-    
+
     let mut tuple_vec: Vec<(String, i32)> = vec![];
 
     let length = nutrient_vec.len();
     for nutrient_iterator in 0..length {
-        //println!("{:?}", (nutrient_vec[nutrient_iterator].as_ref(), nutrient_vec[nutrient_iterator]));
         tuple_vec.push((
-            nutrient_vec[nutrient_iterator].clone().unwrap().name,
-            nutrient_vec[nutrient_iterator].clone().unwrap().kcal
+            nutrient_vec[nutrient_iterator]
+                .as_ref()
+                .unwrap()
+                .name
+                .clone(),
+            nutrient_vec[nutrient_iterator]
+                .as_ref()
+                .unwrap()
+                .kcal
+                .clone(),
         ));
-        //tuple_vec.push((nutrient_vec[nutrient_iterator].name.clone(), nutrient_vec[nutrient_iterator].kcal));
     }
-
-    //println!("{:?}", tuple_vec);
-    //println!("{:?}", nutrient_vec);
-
-    //let (lower_bound, upper_bound, meal_amnt, total_days) = get_args();
-
-    //println!(
-    //    "{:?}",
-    //    match_bounds(
-    //        get_nutrient_from_struct(&nutrient_vec),
-    //        lower_bound,
-    //        upper_bound,
-    //        meal_amnt,
-    //        total_days
-    //    )
-    //);
-
-    Ok(())
+    Ok(tuple_vec)
 }
 
+fn get_args() -> (i32, i32, usize, usize) {
+    let args: Vec<String> = env::args().collect();
 
+    let low = &args[1].parse::<i32>().unwrap();
+    let up = &args[2].parse::<i32>().unwrap();
+    let meals = &args[3].parse::<usize>().unwrap();
+    let days = &args[4].parse::<usize>().unwrap();
+
+    return (*low, *up, *meals, *days);
+}
+
+// Thank you to LegionMammal978#6323 on the Rust Discord server for this function
+fn match_bounds(
+    nutrient_vec: Vec<(String, i32)>,
+    lower_bound: i32,
+    upper_bound: i32,
+    meal_amnt: usize,
+    total_days: usize,
+) -> Vec<Vec<(String, i32)>> {
+    nutrient_vec
+        .iter()
+        .combinations(meal_amnt)
+        .filter(|combo_arr| {
+            let sum = combo_arr.iter().map(|i| i.1).sum();
+            (lower_bound..upper_bound).contains(&sum)
+        })
+        .map(|combo_arr| combo_arr.into_iter().cloned().collect())
+        .take(total_days)
+        .collect()
+}
+
+fn main() {
+    let tuple_vec = def_nutrients().unwrap();
+    let (lower_bound, upper_bound, meal_amnt, total_days) = get_args();
+
+    println!(
+        "{:?}",
+        match_bounds(tuple_vec, lower_bound, upper_bound, meal_amnt, total_days)
+    );
+}

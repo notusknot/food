@@ -106,7 +106,7 @@ fn main() {
     let (lower_bound, upper_bound, meal_amnt, total_days) = get_args();
 
     println!(
-        "{:?}",
+        "{:#?}",
         match_bounds(tuple_vec, lower_bound, upper_bound, meal_amnt, total_days)
     );
 }

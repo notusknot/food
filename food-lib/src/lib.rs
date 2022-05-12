@@ -1,29 +1,10 @@
 use itertools::Itertools;
 use rusqlite::{Connection, Result};
-use std::env;
-
-// Thank you to LegionMammal978#6323 on the Rust Discord server for this function
-pub fn match_bounds(
-    nutrient_vec: Vec<(String, i32)>,
-    lower_bound: i32,
-    upper_bound: i32,
-    meal_amnt: usize,
-    total_days: usize,
-) -> Vec<Vec<(String, i32)>> {
-    nutrient_vec
-        .iter()
-        .combinations(meal_amnt)
-        .filter(|combo_arr| {
-            let sum = combo_arr.iter().map(|i| i.1).sum();
-            (lower_bound..upper_bound).contains(&sum)
-        })
-        .map(|combo_arr| combo_arr.into_iter().cloned().collect())
-        .take(total_days)
-        .collect()
-}
+use wasm_bindgen::prelude::*;
 
 #[derive(Clone, Debug)]
-struct FoodStruct {
+#[wasm_bindgen]
+pub struct FoodStruct {
     name: String,
     description: String,
     author: String,
@@ -42,7 +23,8 @@ struct FoodStruct {
     img_url: String,
 }
 
-pub fn fetch_data() -> Result<()> {
+#[wasm_bindgen]
+pub fn def_nutrients() -> Result<Vec<(String, i32)>> {
     let conn = Connection::open("food.db")?;
 
     let mut stmt = conn.prepare("SELECT * FROM foodList")?;
@@ -75,23 +57,38 @@ pub fn fetch_data() -> Result<()> {
     let length = nutrient_vec.len();
     for nutrient_iterator in 0..length {
         tuple_vec.push((
-            nutrient_vec[nutrient_iterator].as_ref().unwrap().name.clone(),
-            nutrient_vec[nutrient_iterator].as_ref().unwrap().kcal.clone()
+            nutrient_vec[nutrient_iterator]
+                .as_ref()
+                .unwrap()
+                .name
+                .clone(),
+            nutrient_vec[nutrient_iterator]
+                .as_ref()
+                .unwrap()
+                .kcal
+                .clone(),
         ));
     }
+    Ok(tuple_vec)
+}
 
-    let (lower_bound, upper_bound, meal_amnt, total_days) = get_args();
-
-    println!(
-        "{:?}",
-        match_bounds(
-            tuple_vec,
-            lower_bound,
-            upper_bound,
-            meal_amnt,
-            total_days
-        )
-    );
-
-    Ok(())
+// Thank you to LegionMammal978#6323 on the Rust Discord server for this function
+#[wasm_bindgen]
+pub fn match_bounds(
+    nutrient_vec: Vec<(String, i32)>,
+    lower_bound: i32,
+    upper_bound: i32,
+    meal_amnt: usize,
+    total_days: usize,
+) -> Vec<Vec<(String, i32)>> {
+    nutrient_vec
+        .iter()
+        .combinations(meal_amnt)
+        .filter(|combo_arr| {
+            let sum = combo_arr.iter().map(|i| i.1).sum();
+            (lower_bound..upper_bound).contains(&sum)
+        })
+        .map(|combo_arr| combo_arr.into_iter().cloned().collect())
+        .take(total_days)
+        .collect()
 }

@@ -1,0 +1,12 @@
+/home/gabriel/food-ng/food-lib/target/release/deps/getrandom-d95455366a7c8142.rmeta: /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/lib.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/error.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util_libc.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/use_file.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/linux_android.rs
+
+/home/gabriel/food-ng/food-lib/target/release/deps/libgetrandom-d95455366a7c8142.rlib: /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/lib.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/error.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util_libc.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/use_file.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/linux_android.rs
+
+/home/gabriel/food-ng/food-lib/target/release/deps/getrandom-d95455366a7c8142.d: /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/lib.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/error.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util_libc.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/use_file.rs /home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/linux_android.rs
+
+/home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/lib.rs:
+/home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/error.rs:
+/home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util.rs:
+/home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/util_libc.rs:
+/home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/use_file.rs:
+/home/gabriel/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.2.6/src/linux_android.rs:

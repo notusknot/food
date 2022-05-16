@@ -1,6 +1,6 @@
 # Rust
-rust/target/
-rust/debug/
-rust/.envrc
-rust/.direnv
-rust/**/*.rs.bak
+*/target/
+*/debug/
+*/.envrc
+*/.direnv
+*/**/*.rs.bak

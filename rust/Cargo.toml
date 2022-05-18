@@ -1,5 +1,5 @@
 [package]
-name = "food"
+name = "food-lib"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,6 +8,17 @@ edition = "2021"
 [dependencies]
 itertools = "0.10.3"
 rusqlite = "0.27.0"
+serde_json = "1.0.8"
+wasm-bindgen = "0.2.80"
+
+[lib]
+crate-type = ["cdylib"]
+name = "food_lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "food_cli"
+path = "src/cli.rs"
 
 [profile.release]
 strip = true  # Automatically strip symbols from the binary.

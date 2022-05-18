@@ -19,8 +19,8 @@
       {
         devShell = mkShell {
           buildInputs = [
-            clippy rust-analyzer rustfmt hyperfine cargo-bloat sqlite
-            rust-bin.nightly.latest.default
+            clippy rust-analyzer rustfmt hyperfine cargo-bloat sqlite wasm-pack
+            ( rust-bin.nightly.latest.default.override { targets = [ "wasm32-unknown-unknown" ]; })
           ];
         };
       }

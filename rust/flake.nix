@@ -1,29 +1,52 @@
 {
-  description = "Flake for rust version of food";
+  description = "Flake for Rust version of food";
 
   inputs = {
-    nixpkgs.url      = "github:nixos/nixpkgs/nixos-unstable";
+    naersk.url = "github:nix-community/naersk";
+    utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
     rust-overlay.url = "github:oxalica/rust-overlay";
-    flake-utils.url  = "github:numtide/flake-utils";
+    naersk.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, rust-overlay, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, utils, rust-overlay, naersk }:
+    utils.lib.eachDefaultSystem (system:
       let
+        naersk-lib = naersk.lib."${system}";
         overlays = [ (import rust-overlay) ];
         pkgs = import nixpkgs {
           inherit system overlays;
         };
       in
       with pkgs;
-      {
-        devShell = mkShell {
-          buildInputs = [
-            clippy rust-analyzer rustfmt hyperfine cargo-bloat sqlite wasm-pack
-            ( rust-bin.nightly.latest.default.override { targets = [ "wasm32-unknown-unknown" ]; })
+      rec {
+        packages.food = naersk-lib.buildPackage {
+          pname = "food";
+          root = ./.;
+          doCheck = true;
+          checkInputs = [ pkgs.sqlite pkgs.cargo pkgs.rustc];
+        };
+        defaultPackage = packages.food;
+
+        devShell = pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [
+            sqlite
+            wasm-pack
+            rustfmt
+            clippy
+            hyperfine
+            nodePackages.live-server
+             
+            (rust-bin.nightly.latest.default.override { 
+                targets = [ "wasm32-unknown-unknown" ]; 
+                extensions = [ "rust-src" ];
+            })
           ];
         };
-      }
-    );
-}
 
+        apps.food= utils.lib.mkApp {
+          drv = packages.food;
+        };
+        defaultApp = apps.food;
+      });
+}

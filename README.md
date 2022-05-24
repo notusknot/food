@@ -14,7 +14,6 @@ Roadmap/Todo:
 with diabetes, vegetarian, etc)
 - Content-based recommendation engine (requires database extension) 
 
-The Python version was built for testing and currently works, but not very well. It depends on the itertools, json, and sqlite libraries. 
 The Rust version is intended to be used moving forward and is much faster. Currently, it is equally immature and doesn't have the same functionality as the Python one, but is several magnitudes of order faster. 
 
 This project is in a very unstable state and is likely to change a lot over the course of time.

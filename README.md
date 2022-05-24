@@ -25,6 +25,6 @@ cargo run 1800 2200 3 7
 ```
 which currently returns:
 ```rust
-[[446, 183, 1387], [446, 183, 1371], [446, 183, 1356], [446, 183, 1308], [446, 183, 1413], [446, 183, 1210], [446, 183, 1444]]
+[[("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Brandy pudding", 764)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Crunchy cauliflower, apple & blue cheese salad", 417)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Sticky glazed ribs", 604)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Egg fried rice with prawns", 401)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Full English salad", 508)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Celery sticks with blue cheese dip", 158)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Haricot bean & truffle mash", 432)]]
 ```
 The release build takes about 30ms to do everything.

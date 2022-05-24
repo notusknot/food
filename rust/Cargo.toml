@@ -2,15 +2,15 @@
 name = "food-lib"
 version = "0.1.0"
 edition = "2021"
+license = "GPL-3.0-only"
 description = "Library and CLI for creating meal plans"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+homepage = "https://github.com/notusknot/food"
+repository = "https://github.com/notusknot/food"
+readme = "../README.md"
 
 [dependencies]
 itertools = "0.10.3"
 rusqlite = "0.27.0"
-#miniserde = "0.1.24"
-#wasm-bindgen = "0.2.80"
 
 [lib]
 crate-type = ["cdylib"]
@@ -19,7 +19,7 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "food"
-path = "src/cli.rs"
+path = "src/main.rs"
 
 [profile.release]
 strip = true  # Automatically strip symbols from the binary.

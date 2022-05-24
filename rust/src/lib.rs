@@ -1,3 +1,5 @@
+#![deny(unsafe_code)]
+
 use itertools::Itertools;
 use rusqlite::{Connection, Result};
 use std::error::Error;

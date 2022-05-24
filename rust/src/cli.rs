@@ -54,27 +54,16 @@ pub fn def_nutrients() -> Result<Vec<(String, u16)>> {
 
     let mut tuple_vec: Vec<(String, u16)> = vec![];
 
-    let length = nutrient_vec.len();
-    for nutrient_iterator in 0..length {
-        tuple_vec.push((
-            nutrient_vec[nutrient_iterator]
-                .as_ref()
-                .unwrap()
-                .name
-                .clone(),
-            nutrient_vec[nutrient_iterator]
-                .as_ref()
-                .unwrap()
-                .kcal
-                .clone(),
-        ));
-    }
+    tuple_vec.extend(nutrient_vec.iter().map(|item| {
+        let item = item.as_ref().unwrap();
+        (item.name.clone(), item.kcal.clone())
+    }));
+
     Ok(tuple_vec)
 }
 
 fn get_args() -> (u16, u16, usize, usize) {
     let help_msg = "USAGE: food [lower_bound] [upper_bound] [daily_meals] [total_days]";
-
     let error_msg = "Arguments must be positive integers and within range";
 
     let args: Vec<String> = env::args().collect();
@@ -100,7 +89,7 @@ fn get_args() -> (u16, u16, usize, usize) {
         .parse::<usize>()
         .expect(error_msg);
 
-    return (low, up, meals, days);
+    (low, up, meals, days)
 }
 
 fn main() {
@@ -109,12 +98,6 @@ fn main() {
 
     println!(
         "{:?}",
-        match_bounds(
-            tuple_vec,
-            lower_bound.try_into().unwrap(),
-            upper_bound.try_into().unwrap(),
-            meal_amnt,
-            total_days
-        )
+        match_bounds(tuple_vec, lower_bound, upper_bound, meal_amnt, total_days)
     );
 }

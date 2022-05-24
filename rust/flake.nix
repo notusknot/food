@@ -33,9 +33,9 @@
             sqlite
             wasm-pack
             rustfmt
+            cargo-bloat
             clippy
             hyperfine
-            nodePackages.live-server
              
             (rust-bin.nightly.latest.default.override { 
                 targets = [ "wasm32-unknown-unknown" ]; 

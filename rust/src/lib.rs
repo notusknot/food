@@ -25,15 +25,13 @@ pub fn match_bounds(
 
 #[wasm_bindgen]
 pub fn match_bounds_json(
-    data_set: String,
+    data_set: &str,
     lower_bound: u16,
     upper_bound: u16,
     meal_amnt: usize,
     total_days: usize,
 ) -> String {
-    let tuple_vec: Vec<(String, u16)> = from_str(&data_set.as_str()).unwrap();
+    let tuple_vec: Vec<(String, u16)> = from_str(data_set).unwrap();
     let nutrient_vec = match_bounds(tuple_vec, lower_bound, upper_bound, meal_amnt, total_days);
-    let json = to_string(&nutrient_vec);
-
-    json
+    to_string(&nutrient_vec)
 }

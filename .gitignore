@@ -1,6 +1,6 @@
 # Rust
 rust/target/
-rust/debug/
+rust/Cargo.lock/
 rust/.envrc
 rust/.direnv
 */**/*.rs.bak

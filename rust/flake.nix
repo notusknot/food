@@ -32,14 +32,12 @@
           nativeBuildInputs = with pkgs; [
             sqlite
             wasm-pack
-            rustfmt
-            cargo-bloat
-            clippy
             hyperfine
+            cargo-bloat
              
             (rust-bin.nightly.latest.default.override { 
                 targets = [ "wasm32-unknown-unknown" ]; 
-                extensions = [ "rust-src" ];
+                extensions = [ "rust-src" "clippy" "rustfmt" "rust-analyzer-preview" ];
             })
           ];
         };

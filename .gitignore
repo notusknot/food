@@ -1,6 +1,4 @@
 # Rust
 /target/
-/Cargo.lock/
 /.envrc
 /.direnv
-*/**/*.rs.bak

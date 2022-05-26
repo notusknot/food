@@ -42,11 +42,23 @@ impl Arguments {
             return Err("too many arguments");
         }
 
-        let lower_bound = args[1].clone().parse::<u16>().map_err(|_| "lower bound only accepts numbers less than 65,535")?;
-        let upper_bound = args[2].clone().parse::<u16>().map_err(|_| "upper bound only accepts numbers less than 65,535")?;
+        let lower_bound = args[1]
+            .clone()
+            .parse::<u16>()
+            .map_err(|_| "lower bound only accepts numbers less than 65,535")?;
+        let upper_bound = args[2]
+            .clone()
+            .parse::<u16>()
+            .map_err(|_| "upper bound only accepts numbers less than 65,535")?;
         // usize because .combinations() and .take() only take usize
-        let daily_meals = args[3].clone().parse::<usize>().map_err(|_| "daily meals only accepts numbers less than 4,294,967,295")?;
-        let total_days = args[4].clone().parse::<usize>().map_err(|_| "total days only accepts numbers less than 4,294,967,295")?;
+        let daily_meals = args[3]
+            .clone()
+            .parse::<usize>()
+            .map_err(|_| "daily meals only accepts numbers less than 4,294,967,295")?;
+        let total_days = args[4]
+            .clone()
+            .parse::<usize>()
+            .map_err(|_| "total days only accepts numbers less than 4,294,967,295")?;
 
         Ok(Arguments {
             lower_bound,

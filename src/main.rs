@@ -1,8 +1,7 @@
 mod lib;
 
 use lib::*;
-use std::env;
-use std::process;
+use std::{env, process};
 
 fn main() {
     // collect arguments into vec
@@ -21,12 +20,6 @@ fn main() {
 
     // get nutrient_vec from db
     let nutrient_vec = def_nutrients().unwrap();
-  
-    println!(
-        "{:?}",
-        match_bounds(
-            nutrient_vec,
-            arguments
-        )
-    );
+
+    println!("{:?}", match_bounds(nutrient_vec, arguments));
 }

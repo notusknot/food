@@ -3,10 +3,14 @@
 Work in progress - a program that recommends you a weekly meal plan based on your needs
 
 Roadmap/Todo:
-> Sorted by estimated difficulty
 
+- Custom recipes to database
+- Community-submitted recipes to database
+- Pricing per meal, day, week, nutrient, etc
+- Automatic grocery list
+- Pantry matching (only use ingredients user already has)
+- Sharing/exporting plans
 - Filter based on more than one nutrient (should be pretty easy)
-- Rewrite in Rust
 - Implement breakfast/lunch/dinner/snack sorting (will take brute force work on database)
 - Build web interface and compile Rust to WASM + integrate
 - More micronutrient filtering options

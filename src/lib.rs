@@ -42,23 +42,10 @@ impl Arguments {
             return Err("too many arguments");
         }
 
-        let lower_bound = args[1]
-            .clone()
-            .parse::<u16>()
-            .map_err(|_| "invalid number")?;
-        let upper_bound = args[2]
-            .clone()
-            .parse::<u16>()
-            .map_err(|_| "invalid number")?;
-        // usize because .combinations() and .take() only take usize
-        let daily_meals = args[3]
-            .clone()
-            .parse::<usize>()
-            .map_err(|_| "invalid number")?;
-        let total_days = args[4]
-            .clone()
-            .parse::<usize>()
-            .map_err(|_| "invalid number")?;
+        let lower_bound = args[1].parse::<u16>().map_err(|_| "invalid number")?;
+        let upper_bound = args[2].parse::<u16>().map_err(|_| "invalid number")?;
+        let daily_meals = args[3].parse::<usize>().map_err(|_| "invalid number")?;
+        let total_days = args[4].parse::<usize>().map_err(|_| "invalid number")?;
 
         Ok(Arguments {
             lower_bound,

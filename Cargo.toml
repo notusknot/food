@@ -10,8 +10,7 @@ readme = "../README.md"
 
 [dependencies]
 itertools = "0.10.3"
-rusqlite = "0.27.0"
-
+sqlite = "0.26.0"
 
 [lib]
 crate-type = ["cdylib"]

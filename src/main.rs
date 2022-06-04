@@ -13,13 +13,14 @@ fn main() {
     });
 
     // exit if def_nutrients fails
-    if let Err(e) = def_nutrients() {
-        eprintln!("Application error: {}. Is the food.db present?", e);
-        process::exit(1);
-    }
+    //if let Err(e) = def_nutrients() {
+    //    eprintln!("Application error: {}. Is the food.db present?", e);
+    //    process::exit(1);
+    //}
 
     // get nutrient_vec from db
-    let nutrient_vec = def_nutrients().unwrap();
+    //let nutrient_vec = def_nutrients().unwrap();
 
-    println!("{:?}", match_bounds(nutrient_vec, arguments));
+    //println!("{:?}", match_bounds(nutrient_vec, arguments));
+    def_nutrients()
 }

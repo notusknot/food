@@ -1,7 +1,6 @@
 #![deny(unsafe_code)]
 
 use itertools::Itertools;
-use std::error::Error;
 
 // struct to model the food dataset
 #[derive(Debug, Clone)]
@@ -92,6 +91,8 @@ pub fn def_nutrients() {
         .unwrap()
         .into_cursor();
 
+    let mut food_struct_vec: Vec<FoodStruct> = vec![];
+
     while let Some(row) = cursor.next().unwrap() {
         let temporary_food_struct = FoodStruct {
             name: row[0].as_string().unwrap().to_string(),
@@ -102,16 +103,16 @@ pub fn def_nutrients() {
             difficulty: row[13].as_string().unwrap().to_string(),
             img_url: row[15].as_string().unwrap().to_string(),
             servings: row[14].as_integer().unwrap() as u16,
-            kcal: row[3].as_integer().unwrap() as u16,
-            fat: row[4].as_integer().unwrap() as u16,
-            saturates: row[5].as_integer().unwrap() as u16,
-            carbs: row[6].as_integer().unwrap() as u16,
-            sugars: row[7].as_integer().unwrap() as u16,
-            fibre: row[8].as_integer().unwrap() as u16,
-            protein: row[9].as_integer().unwrap() as u16,
-            salt: row[10].as_integer().unwrap() as u16,
+            kcal: row[3].as_float().unwrap() as u16,
+            fat: row[4].as_float().unwrap() as u16,
+            saturates: row[5].as_float().unwrap() as u16,
+            carbs: row[6].as_float().unwrap() as u16,
+            sugars: row[7].as_float().unwrap() as u16,
+            fibre: row[8].as_float().unwrap() as u16,
+            protein: row[9].as_float().unwrap() as u16,
+            salt: row[10].as_float().unwrap() as u16,
         };
 
-        println!("{:?}", temporary_food_struct);
+        food_struct_vec.push(temporary_food_struct);
     }
 }

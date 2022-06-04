@@ -1,6 +1,7 @@
 #![deny(unsafe_code)]
 
 use itertools::Itertools;
+use std::error::Error;
 
 // struct to model the food dataset
 #[derive(Debug, Clone)]
@@ -83,7 +84,7 @@ pub fn match_bounds(
 
 // this functin uses rusqlite to get the food data from the db
 // TODO: implement error handling for db stuff
-pub fn def_nutrients() {
+pub fn def_nutrients() -> Result<Vec<FoodStruct>, Box<dyn Error>> {
     let connection = sqlite::open("food.db").unwrap();
 
     let mut cursor = connection
@@ -115,4 +116,6 @@ pub fn def_nutrients() {
 
         food_struct_vec.push(temporary_food_struct);
     }
+
+    Ok(food_struct_vec)
 }

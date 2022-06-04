@@ -1,5 +1,22 @@
 # Food
 
+## Building 
+
+### Using Nix
+
+To test it out: `nix run github:notusknot/food 1800 2200 3 7`
+
+To build locally: `git clone https://github.com/notusknot/food`
+`cd food`
+`nix build .`
+
+### Using Cargo
+
+`git clone https://github.com/notusknot/food`
+`cd food`
+`cargo build`
+
+
 Work in progress - a program that recommends you a weekly meal plan based on your needs
 
 Roadmap/Todo:
@@ -24,10 +41,17 @@ This project is in a very unstable state and is likely to change a lot over the 
 
 As a quick usage overview, the Rust program takes in 4 parameters: lower bound, upper bound, meals (per day) and total days. An example command to be run could be:
 ```bash
-cargo run 1800 2200 3 7
+target/release/food 1800 2200 3 7
 ```
 which currently returns:
 ```rust
-[[("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Brandy pudding", 764)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Crunchy cauliflower, apple & blue cheese salad", 417)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Sticky glazed ribs", 604)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Egg fried rice with prawns", 401)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Full English salad", 508)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Celery sticks with blue cheese dip", 158)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Haricot bean & truffle mash", 432)]]
+[[("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Chinese roast duck", 1387)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Sugar-dusted snowflake cake", 1371)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Beef & beer pie", 1356)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Steamed vanilla sponge with butterscotch sauce & custard", 1308)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Roast guinea fowl with chestnut, sage & lemon stuffing", 1413)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Beef, potato & banana curry with cashew rice", 1210)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Caramelised white chocolate, ginger caramel & macadamia tarts", 1444)]]
 ```
-The release build takes about 30ms to do everything.
+
+The release build takes 35ms to run on my machine.
+
+```bash
+time target/release/food 1800 2200 3 7
+[[("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Chinese roast duck", 58)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Sugar-dusted snowflake cake", 12)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Beef & beer pie", 56)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Steamed vanilla sponge with butterscotch sauce & custard", 18)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Roast guinea fowl with chestnut, sage & lemon stuffing", 105)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Beef, potato & banana curry with cashew rice", 57)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Caramelised white chocolate, ginger caramel & macadamia tarts", 16)]]
+target/release/food 1800 2200 3 7  0.02s user 0.01s system 99% cpu 0.034 total
+```

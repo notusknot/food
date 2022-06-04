@@ -68,13 +68,13 @@ pub fn match_bounds(
         .combinations(arguments.daily_meals)
         // filter out so the foods add up to the user's bounds
         .filter(|combo_arr| {
-            let sum = combo_arr.iter().map(|i| i.protein).sum();
+            let sum = combo_arr.iter().map(|i| i.kcal).sum();
             (arguments.lower_bound..arguments.upper_bound).contains(&sum)
         })
         .map(|combo_arr| {
             combo_arr
                 .iter()
-                .map(|food| (food.name.clone(), food.protein))
+                .map(|food| (food.name.clone(), food.kcal))
                 .collect()
         })
         // restrict it to the total amount of days the user has requested

@@ -62,7 +62,9 @@ impl Arguments {
 pub fn match_bounds(
     nutrient_vec: Vec<FoodStruct>,
     arguments: Arguments,
-) -> Vec<Vec<(String, u16)>> {
+    // super messy but it works
+    // TODO: figure out how to do this with a struct, not a long tuple!!
+) -> Vec<Vec<(String, String, String, String, String, u16, u16, u16, u16)>> {
     let mut seen = HashSet::new();
 
     nutrient_vec
@@ -77,33 +79,30 @@ pub fn match_bounds(
         .map(|combo_arr| {
             combo_arr
                 .iter()
-                .map(|food| (food.name.clone(), food.kcal))
+                .map(|food| {
+                    (
+                        food.name.clone(),
+                        food.method.clone(),
+                        food.ingredients.clone(),
+                        food.difficulty.clone(),
+                        food.img_url.clone(),
+                        food.kcal,
+                        food.fat,
+                        food.protein,
+                        food.carbs,
+                    )
+                })
                 .collect()
         })
+        // filter duplicates
+        .filter(|v: &Vec<_>| {
+            v.iter()
+                .all(|(name, _, _, _, _, _, _, _, _)| seen.insert(name.clone()))
+        })
         // restrict it to the total amount of days the user has requested
-        .filter(|v: &Vec<_>| v.iter().all(|(name, _)| seen.insert(name.clone())))
         .take(arguments.total_days)
         .collect()
 }
-
-//pub fn new_match_bounds(data_set: Vec<FoodStruct>, arguments: Arguments) -> Vec<Vec<u16>> {
-//    let mut matched_list: Vec<Vec<u16>> = vec![];
-//    let nutrient_vec = data_set.iter().map(|data_set| data_set.kcal);
-//
-//    for combo_arr in nutrient_vec.combinations(arguments.daily_meals) {
-//        combo_arr.into_iter().filter(|combo_arr| {
-//            let sum = combo_arr.sum();
-//            (arguments.lower_bound..arguments.upper_bound).contains(&sum)
-//        });
-//
-//        matched_list.push(combo_arr.clone());
-//        if matched_list.len() == arguments.total_days {
-//            return matched_list;
-//        }
-//    }
-//
-//    matched_list
-//}
 
 // this functin uses rusqlite to get the food data from the db
 // TODO: implement error handling for db stuff
@@ -111,7 +110,7 @@ pub fn def_nutrients() -> Result<Vec<FoodStruct>, Box<dyn Error>> {
     let connection = sqlite::open("food.db").unwrap();
 
     let mut cursor = connection
-        .prepare("SELECT * FROM foodList limit 100")
+        .prepare("SELECT * FROM foodList ORDER BY RANDOM() limit 100")
         .unwrap()
         .into_cursor();
 

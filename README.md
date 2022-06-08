@@ -3,27 +3,40 @@
 Work in progress - a program that recommends you a meal plan based on your needs
 
 If you have Nix installed and would like to try it out: 
-```nix run github:notusknot/food 0 2000 3 7```
+```
+nix run github:notusknot/food 0 2000 3 7
+```
 Note: this currently doesn't work because it requires the database to be present. See more on building locally below:
 
 ## Building
 
 First, clone the repo:
-```git clone https://github.com/notusknot/food```
-```cd food```
+```
+git clone https://github.com/notusknot/food
+```
+```
+cd food
+```
 
 ### Using Nix
 
-```nix build .```
+```
+nix build .
+```
 The binary and library will be in `result/`
 
 ### Using Cargo
 
 To build the cli:
-```cargo build```
+```
+cargo build --release
+```
 
 To build just the library:
-```cargo build --no-default-features```
+```
+cargo build --release --no-default-features
+```
+The binary and library will be in `target/release/`
 
 Roadmap/Todo:
 

@@ -1,27 +1,34 @@
 # Food
 
-## Building 
+Work in progress - a program that recommends you a meal plan based on your needs
+
+If you have Nix installed and would like to try it out: 
+```nix run github:notusknot/food 0 2000 3 7```
+Note: this currently doesn't work because it requires the database to be present. See more on building locally below:
+
+## Building
+
+First, clone the repo:
+```git clone https://github.com/notusknot/food```
+```cd food```
 
 ### Using Nix
 
-To test it out: `nix run github:notusknot/food 1800 2200 3 7`
-
-To build locally: `git clone https://github.com/notusknot/food`
-`cd food`
-`nix build .`
+```nix build .```
+The binary and library will be in `result/`
 
 ### Using Cargo
 
-`git clone https://github.com/notusknot/food`
-`cd food`
-`cargo build`
+To build the cli:
+```cargo build```
 
-
-Work in progress - a program that recommends you a weekly meal plan based on your needs
+To build just the library:
+```cargo build --no-default-features```
 
 Roadmap/Todo:
 
 - Custom recipes to database
+- Family planning: find meal plans that work for a group of people
 - Community-submitted recipes to database
 - Pricing per meal, day, week, nutrient, etc
 - Automatic grocery list

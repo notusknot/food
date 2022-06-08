@@ -10,7 +10,10 @@ readme = "../README.md"
 
 [dependencies]
 itertools = "0.10.3"
-sqlite = "0.26.0"
+sqlite = { version = "0.26.0", optional = true }
+
+[features]
+default = ["sqlite"]
 
 [lib]
 crate-type = ["cdylib"]
@@ -25,7 +28,6 @@ path = "src/main.rs"
 strip = true  # Automatically strip symbols from the binary.
 lto = true
 codegen-units = 1
-panic = "abort"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = false

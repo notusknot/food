@@ -1,6 +1,11 @@
+# this file is to convert my food.json to a static slice in data.rs
+# python3 json_to_rust.py > src/data.rs
+# make sure food.json is presentx
+
 import json
 from collections.abc import MutableMapping
 
+# flattens a dict
 def flatten(d,sep='_'):
     import collections
 

@@ -34,7 +34,7 @@ cargo build --release
 
 To build just the library:
 ```
-cargo build --release --no-default-features
+cargo build --lib --release
 ```
 The binary and library will be in `target/release/`
 
@@ -64,14 +64,73 @@ As a quick usage overview, the Rust program takes in 4 parameters: lower bound, 
 target/release/food 1800 2200 3 7
 ```
 which currently returns:
-```rust
-[[("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Chinese roast duck", 1387)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Sugar-dusted snowflake cake", 1371)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Beef & beer pie", 1356)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Steamed vanilla sponge with butterscotch sauce & custard", 1308)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Roast guinea fowl with chestnut, sage & lemon stuffing", 1413)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Beef, potato & banana curry with cashew rice", 1210)], [("Cauliflower & macaroni cheese", 446), ("Bean & pesto mash", 183), ("Caramelised white chocolate, ginger caramel & macadamia tarts", 1444)]]
+```
+New Day:
+────────────────────────────────────────────
+name: Lighter Chinese chilli beef, 
+ingredients: ¼ tsp chilli flakes, 
+instructions: Pour the remaining oil into the wok and heat it again until very hot. Throw in the garlic, ginger, red pepper and spring onions, and stir-fry for 2-3 mins until starting to brown. Add the chilli flakes, then pour in the soy sauce and orange juice mix with 4-5 tbsp water. As it comes to the boil, stir in the beef and steamed veg, and cook briefly just to heat through. If you want a little more sauciness, splash in another 1-2 tbsp water., 
+servings: 2, 
+kcal: 389, 
+fat: 16, 
+carbs: 26, 
+protein: 33
+
+name: Spinach, cheese & onion rice torte, 
+ingredients: 2 tsp sesame seed, 
+instructions: Place the tin on the preheated baking tray and bake for 10 mins, then reduce the temperature to 160C/140C fan/gas 4 and bake for a further 30 mins until the pastry is golden. Leave to cool for 10 mins before cutting into squares., 
+servings: 6, 
+kcal: 631, 
+fat: 38, 
+carbs: 55, 
+protein: 18
+
+name: Butternut macaroni cheese, 
+ingredients: 50g parmesan, 
+instructions: Take the sauce off the heat and mash in a third of the squash with the cheddar and half the Parmesan. Season, then stir in the drained macaroni with the remaining squash. Tip into an ovenproof dish, scatter with the remaining Parmesan and bake for 15 mins until golden and bubbling., 
+servings: 4, 
+kcal: 828, 
+fat: 38, 
+carbs: 94, 
+protein: 35
+
+...
+
+New Day:
+────────────────────────────────────────────
+name: Easy sausage casserole, 
+ingredients: 4 slices  ciabatta, 
+instructions: Meanwhile, toast the ciabatta, then rub with the remaining garlic, drizzle with oil, scatter with a few thyme leaves and serve with the casserole., 
+servings: 2, 
+kcal: 701, 
+fat: 34, 
+carbs: 71, 
+protein: 29
+
+name: Sicilian potato cake, 
+ingredients: handful fresh  thyme leaves, 
+instructions: Bake for about 1hr 10 mins until the potato cake is set, with a slight wobble in the middle. Let it rest for 5 mins then loosen from the sides with a knife before releasing the tin. Slide onto a plate and sprinkle with the thyme leaves. Serve hot or warm. Can be prepared up to the end of step 3 the night before and kept covered in the fridge., 
+servings: 12, 
+kcal: 381, 
+fat: 24, 
+carbs: 22, 
+protein: 20
+
+name: Roast rack of lamb with Moroccan spices, 
+ingredients: Greek yogurt, 
+instructions: Put the lamb on a warmed plate and leave it to rest for 5 minutes. Slice it in half to give 3-4 cutlets each, then cut in half again. Spoon the couscous on to two plates, scatter over the almonds and top with the lamb. Serve with a spoonful of Greek yogurt., 
+servings: 2, 
+kcal: 888, 
+fat: 67, 
+carbs: 40, 
+protein: 34
 ```
 
-The release build takes 35ms to run on my machine.
+The release build takes about 6ms to run on my machine.
 
 ```bash
-time target/release/food 1800 2200 3 7
-[[("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Chinese roast duck", 58)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Sugar-dusted snowflake cake", 12)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Beef & beer pie", 56)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Steamed vanilla sponge with butterscotch sauce & custard", 18)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Roast guinea fowl with chestnut, sage & lemon stuffing", 105)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Beef, potato & banana curry with cashew rice", 57)], [("Cauliflower & macaroni cheese", 19), ("Bean & pesto mash", 11), ("Caramelised white chocolate, ginger caramel & macadamia tarts", 16)]]
-target/release/food 1800 2200 3 7  0.02s user 0.01s system 99% cpu 0.034 total
+$ hyperfine "target/release/food 1800 2200 3 7" --warmup 100
+Benchmark 1: target/release/food 1800 2200 3 7
+  Time (mean ± σ):       6.2 ms ±   0.5 ms    [User: 2.5 ms, System: 2.5 ms]
+  Range (min … max):     5.4 ms …   7.9 ms    273 runs
 ```

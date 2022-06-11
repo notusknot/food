@@ -1,7 +1,9 @@
-mod lib;
+pub mod data;
+pub mod lib;
 
+use data::*;
 use lib::*;
-use std::error::Error;
+//use std::error::Error;
 use std::{env, process};
 
 fn main() {
@@ -9,11 +11,12 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     // parse them into Arguments struct or exit if there is an error
     let arguments: Arguments = Arguments::get(&args).unwrap_or_else(|err| {
-        eprintln!("Problem parsing arguments: {}\n\nUSAGE:\n    food [kcal_lower_bound] [kcal_upper_bound] [protein_lower_bound] [protein_upper_bound] [daily_meals] [total_days]", err);
+        eprintln!("Problem parsing arguments: {}\n\nUSAGE:\n    food [kcal_lower_bound] [kcal_upper_bound] [daily_meals] [total_days]", err);
         process::exit(1);
     });
 
     // get nutrient_vec from db
+    /*
     let nutrient_vec = match def_nutrients() {
         Ok(nutrient_vec) => nutrient_vec,
         Err(err) => {
@@ -21,24 +24,26 @@ fn main() {
             process::exit(1)
         }
     };
-
-    println!("{}", match_bounds(nutrient_vec, arguments));
+    */
+    //match_bounds(NUTRIENTS, arguments);
+    println!("{}", match_bounds(NUTRIENTS, arguments));
 }
 
 // this functin uses rusqlite to get the food data from the db
 // TODO: implement error handling for db stuff
-pub fn def_nutrients() -> Result<Vec<FoodStruct>, Box<dyn Error>> {
+/*
+pub fn def_nutrients() -> Result<Vec<FoodItem>, Box<dyn Error>> {
     let connection = sqlite::open("food.db").unwrap();
 
     let mut cursor = connection
-        .prepare("SELECT * FROM foodList ORDER BY RANDOM() limit 100")
+        .prepare("SELECT * FROM foodList ORDER BY RANDOM()")
         .unwrap()
         .into_cursor();
 
-    let mut food_struct_list: Vec<FoodStruct> = vec![];
+    let mut food_struct_list: Vec<FoodItem> = vec![];
 
     while let Some(row) = cursor.next().unwrap() {
-        let temporary_food_struct = FoodStruct {
+        let temporary_food_struct = FoodItem {
             name: row[0].as_string().unwrap().to_string(),
             author: row[1].as_string().unwrap().to_string(),
             description: row[2].as_string().unwrap().to_string(),
@@ -62,3 +67,4 @@ pub fn def_nutrients() -> Result<Vec<FoodStruct>, Box<dyn Error>> {
 
     Ok(food_struct_list)
 }
+*/

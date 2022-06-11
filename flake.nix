@@ -47,7 +47,7 @@
              
             (rust-bin.nightly.latest.default.override { 
                 targets = [ "wasm32-unknown-unknown" ]; 
-                extensions = [ "clippy" "rustfmt" "rust-analyzer-preview" ];
+                extensions = [ "rust-src" "clippy" "rustfmt" "rust-analyzer-preview" ];
             })
           ];
         };

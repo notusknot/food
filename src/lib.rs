@@ -1,20 +1,19 @@
 #![deny(unsafe_code)]
 
 use itertools::Itertools;
-//use miniserde::{json, Deserialize, Serialize};
 use std::collections::HashSet;
 use std::fmt;
 
 // struct to model the food dataset
-#[derive(Debug, Clone)]
-pub struct FoodStruct {
-    pub name: String,
-    pub description: String,
-    pub author: String,
-    pub ingredients: String,
-    pub instructions: String,
-    pub difficulty: String,
-    pub img_url: String,
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+pub struct FoodItem {
+    pub name: &'static str,
+    pub description: &'static str,
+    pub author: &'static str,
+    pub ingredients: &'static str,
+    pub instructions: &'static str,
+    pub difficulty: &'static str,
+    pub img_url: &'static str,
     pub servings: u16,
     pub kcal: u16,
     pub fat: u16,
@@ -25,8 +24,7 @@ pub struct FoodStruct {
     pub protein: u16,
     pub salt: u16,
 }
-
-impl fmt::Display for FoodStruct {
+impl fmt::Display for FoodItem {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Customize so what's needed is printed
         write!(f, "name: {}, \ningredients: {}, \ninstructions: {}, \nservings: {}, \nkcal: {}, \nfat: {}, \ncarbs: {}, \nprotein: {}\n", 
@@ -35,9 +33,9 @@ impl fmt::Display for FoodStruct {
 }
 
 #[derive(Debug)]
-pub struct MealsForDay( pub Vec<FoodStruct> );
+pub struct DayOfMeals( pub Vec<FoodItem> );
 
-impl fmt::Display for MealsForDay {
+impl fmt::Display for DayOfMeals {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.0.iter().fold(Ok(()), |result, food| {
             result.and_then(|_| writeln!(f, "{}", food))
@@ -46,12 +44,12 @@ impl fmt::Display for MealsForDay {
 }
 
 #[derive(Debug)]
-pub struct FinalMealPlan( pub Vec<MealsForDay> );
+pub struct FinalMealPlan( pub Vec<DayOfMeals> );
 
 impl fmt::Display for FinalMealPlan {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.0.iter().fold(Ok(()), |result, food| {
-            result.and_then(|_| writeln!(f, "New day\n-------------------\n{}", food))
+            result.and_then(|_| writeln!(f, "New Day:\n────────────────────────────────────────────\n{}", food))
         })
     }
 }
@@ -59,75 +57,98 @@ impl fmt::Display for FinalMealPlan {
 pub struct Arguments {
     pub kcal_lower_bound: u16,
     pub kcal_upper_bound: u16,
-    pub protein_lower_bound: u16,
-    pub protein_upper_bound: u16,
     pub daily_meals: usize,
     pub total_days: usize,
 }
 
 impl Arguments {
     pub fn get(args: &[String]) -> Result<Arguments, &str> {
-        if args.len() - 1 < 6 {
+        if args.len() - 1 < 4 {
             return Err("not enough arguments");
         }
 
-        if args.len() - 1 > 6 {
+        if args.len() - 1 > 4 {
             return Err("too many arguments");
         }
 
         let kcal_lower_bound = args[1].parse::<u16>().map_err(|_| "invalid number")?;
         let kcal_upper_bound = args[2].parse::<u16>().map_err(|_| "invalid number")?;
-        let protein_lower_bound = args[3].parse::<u16>().map_err(|_| "invalid number")?;
-        let protein_upper_bound = args[4].parse::<u16>().map_err(|_| "invalid number")?;
-        let daily_meals = args[5].parse::<usize>().map_err(|_| "invalid number")?;
-        let total_days = args[6].parse::<usize>().map_err(|_| "invalid number")?;
+        let daily_meals = args[3].parse::<usize>().map_err(|_| "invalid number")?;
+        let total_days = args[4].parse::<usize>().map_err(|_| "invalid number")?;
 
         Ok(Arguments {
             kcal_lower_bound,
             kcal_upper_bound,
-            protein_lower_bound,
-            protein_upper_bound,
             daily_meals,
             total_days,
         })
     }
 }
-
-// Thank you to LegionMammal978#6323 on the Rust Discord server for this function
-// this function takes in a dataset, the user's calorie bounds and meal plans and returns a meal
-// plan fitted to their needs
+/*
 pub fn match_bounds(
-    nutrient_vec: Vec<FoodStruct>,
+    nutrient_vec: &[FoodItem],
     arguments: Arguments,
-    // super messy but it works
-    // TODO: figure out how to do this with a struct, not a long tuple!!
-) -> FinalMealPlan {
-    let mut seen = HashSet::new();
+) -> Vec<Vec<&FoodItem>> {
+    let mut matched_list: Vec<Vec<&FoodItem>> = vec![];
+    let mut seen: HashSet<String> = HashSet::new();
 
-    FinalMealPlan(nutrient_vec
-        .into_iter()
-        // get combinations of foods that match the amount of days
-        .combinations(arguments.daily_meals)
-        // filter out so the foods add up to the user's bounds
-        .filter(|combo_arr| {
-            let sum = combo_arr.iter().map(|i| i.kcal).sum();
-            //let protein_sum = combo_arr.iter().map(|i| i.protein).sum();
-            (arguments.kcal_lower_bound..arguments.kcal_upper_bound).contains(&sum)
-            //.contains((arguments.protein_lower_bound..arguments.protein_upper_bound).contains(&protein_sum))
-        })
-        // filter duplicates
-        .filter(|v: &Vec<_>| {
-            v.iter().all(|food| {
-                //if !seen.contains(&food.name) {
-                seen.insert(food.name.clone())
-                //}
-            })
-        })
-        // restrict it to the total amount of days the user has requested
-        .take(arguments.total_days)
-        .map(MealsForDay)
-        .collect::<Vec<MealsForDay>>())
+    for combination in nutrient_vec.into_iter().combinations(arguments.daily_meals) {
+        let sum = combination.iter().map(|i| i.kcal).sum();
+        if combination.iter().all(|combo| !seen.contains(&combo.name))
+            && (arguments.kcal_lower_bound..arguments.kcal_upper_bound).contains(&sum)
+        {
+            combination
+                .iter()
+                .all(|combo| seen.insert(combo.name.clone()));
+            matched_list.push(combination);
+            if matched_list.len() == arguments.total_days {
+                return matched_list;
+            }
+        }
+    }
+
+    matched_list
 }
+*/
+
+pub fn match_bounds(nutrients: &[FoodItem], arguments: Arguments) -> FinalMealPlan {
+    let mut matched_list: Vec<DayOfMeals> = vec![];
+    let mut seen: HashSet<&str> = HashSet::new();
+
+    // iterates through each combination of meals
+    for combination in nutrients
+        .iter()
+        .cloned()
+        .combinations(arguments.daily_meals)
+    {
+        // checks if food has already been used
+        if combination.iter().any(|food| seen.contains(food.name)) {
+            continue;
+        }
+
+        // checks if combination fits within calorie range
+        let sum: u16 = combination.iter().map(|i| i.kcal).sum();
+        if !(arguments.kcal_lower_bound..arguments.kcal_upper_bound).contains(&sum) {
+            continue;
+        }
+
+        // marks food as used
+        for food in &combination {
+            seen.insert(food.name);
+        }
+
+        // if all of the previous are successful, add this combination to our list
+        matched_list.push(DayOfMeals(combination));
+
+        // return when we reach the amount of days the user requested
+        if matched_list.len() == arguments.total_days {
+            return FinalMealPlan(matched_list);
+        }
+    }
+
+    FinalMealPlan(matched_list)
+}
+
 /*
 pub fn match_bounds_json(
     json_data_set: &str,
@@ -138,7 +159,7 @@ pub fn match_bounds_json(
     daily_meals: usize,
     total_days: usize,
 ) -> String {
-    let data_set: Vec<FoodStruct> = json::from_str(json_data_set).unwrap();
+    let data_set: Vec<FoodItem> = json::from_str(json_data_set).unwrap();
     let arguments = Arguments {
         kcal_lower_bound,
         kcal_upper_bound,

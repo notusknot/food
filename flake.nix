@@ -33,6 +33,7 @@
       rec {
         packages.food = naersk-lib.buildPackage {
           pname = "food";
+          version = "0.0.0";
           root = ./.;
           doCheck = true;
           checkInputs = [ pkgs.cargo pkgs.rustc ];
@@ -44,9 +45,9 @@
             hyperfine
             wasm-pack
              
-            (rust-bin.nightly.latest.default.override { 
+            (rust-bin.stable.latest.default.override { 
                 targets = [ "wasm32-unknown-unknown" ]; 
-                extensions = [ "rust-src" "clippy" "rustfmt" "rust-analyzer-preview" ];
+                extensions = [ "rust-src" "clippy" "rustfmt" ];
             })
           ];
         };

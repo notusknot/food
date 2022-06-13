@@ -68,7 +68,11 @@ pub struct Arguments {
     pub total_days: usize,
 }
 
-pub fn random_combinations(rng: &Rng, nutrients: &'static [FoodItem], amount: usize) -> Vec<&'static FoodItem> {
+pub fn random_combinations(
+    rng: &Rng,
+    nutrients: &'static [FoodItem],
+    amount: usize,
+) -> Vec<&'static FoodItem> {
     let mut combination: Vec<&'static FoodItem> = vec![];
 
     // create combination

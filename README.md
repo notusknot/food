@@ -56,6 +56,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About
 
+[![asciicast](https://asciinema.org/a/GZtTzdITmX55zAw6giUyyiDoa.svg)](https://asciinema.org/a/GZtTzdITmX55zAw6giUyyiDoa)
+
 This project is my first one done in Rust, so please excuse any code that could be improved. However, I am working hard to make sure this program is fast, safe, and correct, in the spirit of the Rust language.
 
 A changelog can be found in [CHANGELOG.md]
@@ -141,7 +143,7 @@ Benchmark 1: target/release/food 1800 2200 3 7
 ```
  The program can also handle generating large amounts of complex plans quickly:
  ```
-$ 	hyperfine "target/release/food 3500 3600 8 365" --warmup 30
+$ hyperfine "target/release/food 3500 3600 8 365" --warmup 30
 Benchmark 1: target/release/food 3500 3600 8 365
   Time (mean ± σ):     135.6 ms ±   2.6 ms    [User: 20.1 ms, System: 113.1 ms]
   Range (min … max):   130.0 ms … 141.5 ms    20 runs

@@ -7,7 +7,7 @@
   <p align="center">
     A program (and Rust library) that recommends you a meal plan based on your needs
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/notusknot/food#about">View Demo</a>
     ·
     <a href="https://github.com/notusknot/food/issues">Report Bug</a>
     ·

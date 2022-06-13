@@ -9,7 +9,7 @@ repository = "https://github.com/notusknot/food"
 readme = "./README.md"
 
 [dependencies]
-rand = "0.8.5"
+fastrand = "1.7.0"
 
 [lib]
 crate-type = ["cdylib"]
@@ -27,3 +27,6 @@ codegen-units = 1
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = false
+
+[target.x86_64-apple-darwin]
+rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/zld"]

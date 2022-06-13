@@ -35,7 +35,7 @@
           pname = "food";
           root = ./.;
           doCheck = true;
-          checkInputs = [ pkgs.sqlite pkgs.cargo pkgs.rustc];
+          checkInputs = [ pkgs.cargo pkgs.rustc ];
         };
         defaultPackage = packages.food;
 
@@ -43,7 +43,6 @@
           nativeBuildInputs = with pkgs; [
             hyperfine
             wasm-pack
-            sqlite
              
             (rust-bin.nightly.latest.default.override { 
                 targets = [ "wasm32-unknown-unknown" ]; 

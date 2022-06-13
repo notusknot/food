@@ -3,8 +3,10 @@
 use std::collections::HashSet;
 use std::fmt;
 
+use fastrand::Rng;
+
 // struct to model the food dataset
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct FoodItem {
     pub name: &'static str,
     pub description: &'static str,
@@ -66,7 +68,17 @@ pub struct Arguments {
     pub total_days: usize,
 }
 
+pub fn random_combinations(rng: &Rng, nutrients: &'static [FoodItem], amount: usize) -> Vec<&'static FoodItem> {
+    let mut combination: Vec<&'static FoodItem> = vec![];
 
+    // create combination
+    for _ in 0..amount {
+        let i: usize = rng.usize(..nutrients.len());
+        combination.push(&nutrients[i]);
+    }
+
+    combination
+}
 
 // TODO: possibly rewrite this function recursively?
 pub fn match_bounds(
@@ -78,18 +90,11 @@ pub fn match_bounds(
 
     // max amount of tries to prevent the program from running endlessly
     const TRIES: usize = 100_000;
+    let rng = fastrand::Rng::new();
 
     // iterates through each combination of meals
     for _ in 0..TRIES {
-        use rand::seq::SliceRandom as _;
-        let combination: Vec<_> = nutrients
-            .choose_multiple(&mut rand::thread_rng(), arguments.daily_meals)
-            .collect();
-
-        // checks if food has already been used
-        if combination.iter().any(|food| seen.contains(food.name)) {
-            continue;
-        }
+        let combination = random_combinations(&rng, nutrients, arguments.daily_meals);
 
         // checks if combination fits within calorie range
         let sum: u16 = combination.iter().map(|i| i.kcal).sum();

@@ -1,0 +1,23 @@
+name: Format, lint and build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check if formatting is good
+      run: cargo fmt -- --check
+    - name: Check if linting is good
+      run: rustup component add clippy
+      run: cargo clippy -- -D warnings
+    - name: Check if it builds
+      run: cargo build --verbose
+

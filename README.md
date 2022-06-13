@@ -6,7 +6,6 @@ If you have Nix installed and would like to try it out:
 ```
 nix run github:notusknot/food 0 2000 3 7
 ```
-Note: this currently doesn't work because it requires the database to be present. See more on building locally below:
 
 ## Building
 

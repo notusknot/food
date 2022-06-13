@@ -1,4 +1,4 @@
-name: Format, lint and build
+name: Lint
 
 on:
   push:

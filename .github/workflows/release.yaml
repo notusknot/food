@@ -1,4 +1,4 @@
-name: Build and publish release for all platforms
+name: Release
 
 on:
   push:

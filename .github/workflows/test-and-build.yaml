@@ -15,8 +15,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Check if formatting is good
       run: cargo fmt -- --check
-    - name: Check if linting is good
+    - name: Add clippy
       run: rustup component add clippy
+    - name: Check if linting is good
       run: cargo clippy -- -D warnings
     - name: Check if it builds
       run: cargo build --verbose

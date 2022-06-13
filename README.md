@@ -15,7 +15,7 @@
   </p>
 </div>
 
-[![Latest Release][release-badge]][release-latest] [![GPL3 License][license-badge]][license-url] [![LOC][loc-badge]][loc-report] ![Lint Status][lint-badge]
+[![Latest Release][release-badge]][release-latest] [![GPL3 License][license-badge]][license-url] [![LOC][loc-badge]][loc-report] [![Lint Status][lint-badge]][lint-latest]
 
 
 [license-badge]: https://img.shields.io/github/license/notusknot/food.svg
@@ -25,6 +25,7 @@
 [loc-badge]: https://tokei.rs/b1/github/notusknot/food
 [loc-report]: https://github.com/notusknot/food
 [lint-badge]: https://github.com/notusknot/food/actions/workflows/test-and-build.yaml/badge.svg
+[lint-latest]: https://github.com/notusknot/food/actions/workflows/test-and-build.yaml
 
 <!-- TABLE OF CONTENTS -->
 <h2>Table of Contents</h2>
@@ -36,8 +37,8 @@
       <li><a href="#prerequisites">Prerequisites</a></li>
       <li><a href="#installation">Installation</a></li>
       <ul>
-        <li><a href="#with-nix">With nix</a></li>
-        <li><a href="#with-cargo">With cargo</a></li>
+        <li><a href="#using-nix">Using nix</a></li>
+        <li><a href="#using-cargo">Using cargo</a></li>
       </ul>
     </ul>
   </li>

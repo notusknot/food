@@ -129,9 +129,7 @@ pub fn to_json(final_meal_plan: FinalMealPlan) -> String {
     use miniserde::json::*;
     to_string(&final_meal_plan)
 }
-*/
 
-/*
 pub fn match_bounds_json(
     json_data_set: &str,
     kcal_lower_bound: u16,

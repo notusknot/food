@@ -33,7 +33,6 @@
       rec {
         packages.food = naersk-lib.buildPackage {
           pname = "food";
-          version = "0.0.0";
           root = ./.;
           doCheck = true;
           checkInputs = [ pkgs.cargo pkgs.rustc ];

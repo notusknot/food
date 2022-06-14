@@ -3,40 +3,78 @@ pub mod lib;
 
 use data::*;
 use lib::*;
-use std::{env, process};
+use std::process;
+
+const HELP: &str = "\
+food: generate unique meal plans to fit your needs
+
+USAGE:
+    food [kcal_lower_bound] [kcal_upper_bound] [daily_meals] [total_days] [OPTIONS]
+
+ARGS:
+    <kcal_lower_bound>    The minimum calories per day
+    <kcal_upper_bound>    The maximum calories per day
+    <daily_meals>         The amount of meals per day
+    <total_days>          The total amount of days to generate
+
+OPTIONS:
+    -j --json        Output JSON (not implemented yet)
+
+FLAGS:
+    -h, --help       Prints help information
+    -v, --version    Prints current version
+";
+
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 impl Arguments {
-    pub fn get(args: &[String]) -> Result<Arguments, &str> {
-        if args.len() - 1 < 4 {
-            return Err("not enough arguments");
+    fn parse_args() -> Result<Arguments, pico_args::Error> {
+        let mut pargs = pico_args::Arguments::from_env();
+
+        // Help has a higher priority and should be handled separately.
+        if pargs.contains(["-h", "--help"]) {
+            eprint!("{}", HELP);
+            std::process::exit(0);
         }
 
-        if args.len() - 1 > 4 {
-            return Err("too many arguments");
+        if pargs.contains(["-v", "--version"]) {
+            eprintln!("{}", VERSION);
+            std::process::exit(0);
         }
 
-        let kcal_lower_bound = args[1].parse::<u16>().map_err(|_| "invalid number")?;
-        let kcal_upper_bound = args[2].parse::<u16>().map_err(|_| "invalid number")?;
-        let daily_meals = args[3].parse::<usize>().map_err(|_| "invalid number")?;
-        let total_days = args[4].parse::<usize>().map_err(|_| "invalid number")?;
+        if pargs.contains(["-j", "--json"]) {
+            eprintln!("\x1b[1;31mJSON output has not been implemented yet");
+        }
 
-        Ok(Arguments {
-            kcal_lower_bound,
-            kcal_upper_bound,
-            daily_meals,
-            total_days,
-        })
+        let args = Arguments {
+            kcal_lower_bound: pargs.free_from_str()?,
+            kcal_upper_bound: pargs.free_from_str()?,
+            daily_meals: pargs.free_from_str()?,
+            total_days: pargs.free_from_str()?,
+        };
+
+        // It's up to the caller what to do with the remaining arguments.
+        let remaining = pargs.finish();
+        if !remaining.is_empty() {
+            eprintln!("Warning: unused arguments left: {:?}.", remaining);
+        }
+
+        Ok(args)
     }
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    //let args: Vec<String> = env::args().collect();
 
     // parse args into Arguments struct or exit if there is an error
-    let arguments: Arguments = Arguments::get(&args).unwrap_or_else(|err| {
-        eprintln!("Problem parsing arguments: {}\n\nUSAGE:\n    food [kcal_lower_bound] [kcal_upper_bound] [daily_meals] [total_days]", err);
-        process::exit(1);
-    });
+    let arguments: Arguments = match Arguments::parse_args() {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("{}", HELP);
+            eprintln!("\x1b[1;31mProblem parsing arguments: {}", e);
+            std::process::exit(1);
+        }
+    };
 
     // get meal plan from match_bounds
     let meal_plan: FinalMealPlan = match match_bounds(NUTRIENTS, arguments) {

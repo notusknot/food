@@ -68,7 +68,7 @@ pub struct Arguments {
     pub total_days: usize,
 }
 
-pub fn random_combinations(
+pub fn generate_random_combination(
     rng: &Rng,
     nutrients: &'static [FoodItem],
     amount: usize,
@@ -98,7 +98,7 @@ pub fn match_bounds(
 
     // iterates through each combination of meals
     for _ in 0..TRIES {
-        let combination = random_combinations(&rng, nutrients, arguments.daily_meals);
+        let combination = generate_random_combination(&rng, nutrients, arguments.daily_meals);
 
         // checks if combination fits within calorie range
         let sum: u16 = combination.iter().map(|i| i.kcal).sum();
@@ -123,3 +123,34 @@ pub fn match_bounds(
     // if the loop can't find a combination within the amount of tries, fail
     Err("Could not create satisfactory meal plan. Maybe tweak the parameters?")
 }
+
+/*
+pub fn to_json(final_meal_plan: FinalMealPlan) -> String {
+    use miniserde::json::*;
+    to_string(&final_meal_plan)
+}
+*/
+
+/*
+pub fn match_bounds_json(
+    json_data_set: &str,
+    kcal_lower_bound: u16,
+    kcal_upper_bound: u16,
+    protein_lower_bound: u16,
+    protein_upper_bound: u16,
+    daily_meals: usize,
+    total_days: usize,
+) -> String {
+    let data_set: Vec<FoodItem> = json::from_str(json_data_set).unwrap();
+    let arguments = Arguments {
+        kcal_lower_bound,
+        kcal_upper_bound,
+        protein_lower_bound,
+        protein_upper_bound,
+        daily_meals,
+        total_days,
+    };
+    let nutrient_vec = match_bounds(data_set, arguments);
+    json::to_string(&nutrient_vec)
+}
+*/

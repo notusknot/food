@@ -12,10 +12,11 @@
     <a href="https://github.com/notusknot/food/issues">Report Bug</a>
     ·
     <a href="https://github.com/notusknot/food/issues">Request Feature</a>
+    
+  [![Latest Release][release-badge]][release-latest] [![GPL3 License][license-badge]][license-url] [![LOC][loc-badge]][loc-report] [![Lint Status][lint-badge]][lint-latest]
   </p>
 </div>
 
-[![Latest Release][release-badge]][release-latest] [![GPL3 License][license-badge]][license-url] [![LOC][loc-badge]][loc-report] [![Lint Status][lint-badge]][lint-latest]
 
 
 [license-badge]: https://img.shields.io/github/license/notusknot/food.svg

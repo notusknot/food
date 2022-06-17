@@ -4,6 +4,7 @@ pub mod lib;
 use data::*;
 use lib::*;
 use std::process;
+use std::fmt;
 
 const HELP: &str = "\
 food: generate unique meal plans to fit your needs
@@ -26,6 +27,31 @@ FLAGS:
 ";
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+fn main() {
+    // parse args into Arguments struct or exit if there is an error
+    let arguments: Arguments = match Arguments::parse_args() {
+        Ok(v) => v,
+        Err(e) => {
+            eprintln!("{}", HELP);
+            eprintln!("\x1b[1;31mProblem parsing arguments: {}", e);
+            std::process::exit(1);
+        }
+    };
+
+    let meal_plan = match match_bounds(NUTRIENTS, arguments) {
+        Ok(meal_plan) => meal_plan,
+        Err(error) => {
+            eprintln!("Application error: {}", error);
+            process::exit(1)
+        }
+    };
+
+    let final_meal_plan = FinalMealPlan{ plan: meal_plan.into_iter().map(|day| DayOfMeals{ day }).collect()};
+
+    println!("{}", final_meal_plan);
+}
+
 
 impl Arguments {
     fn parse_args() -> Result<Arguments, pico_args::Error> {
@@ -63,27 +89,35 @@ impl Arguments {
     }
 }
 
-fn main() {
-    //let args: Vec<String> = env::args().collect();
-
-    // parse args into Arguments struct or exit if there is an error
-    let arguments: Arguments = match Arguments::parse_args() {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("{}", HELP);
-            eprintln!("\x1b[1;31mProblem parsing arguments: {}", e);
-            std::process::exit(1);
-        }
-    };
-
-    // get meal plan from match_bounds
-    let meal_plan: FinalMealPlan = match match_bounds(NUTRIENTS, arguments) {
-        Ok(meal_plan) => meal_plan,
-        Err(error) => {
-            eprintln!("Application error: {}", error);
-            process::exit(1)
-        }
-    };
-
-    println!("{}", meal_plan);
+impl fmt::Display for FoodItem {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // Customize so what's needed is printed
+        write!(f, "name: {}, \ningredients: {}, \ninstructions: {}, \nservings: {}, \nkcal: {}, \nfat: {}, \ncarbs: {}, \nprotein: {}\n", 
+        self.name, self.ingredients, self.instructions, self.servings, self.kcal, self.fat, self.carbs, self.protein)
+    }
 }
+
+
+impl fmt::Display for DayOfMeals {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.day.iter().fold(Ok(()), |result, food| {
+            result.and_then(|_| writeln!(f, "{}", food))
+        })
+    }
+}
+
+
+impl fmt::Display for FinalMealPlan {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.plan.iter().fold(Ok(()), |result, food| {
+            result.and_then(|_| {
+                writeln!(
+                    f,
+                    "New Day:\n────────────────────────────────────────────\n{}",
+                    food
+                )
+            })
+        })
+    }
+}
+

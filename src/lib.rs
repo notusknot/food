@@ -1,22 +1,21 @@
 #![deny(unsafe_code)]
-
+#![deny(rust_2018_idioms)]
 use std::collections::HashSet;
-use std::fmt;
 
 use fastrand::Rng;
-use miniserde::{json::from_str, Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
 // struct to model the food dataset
-#[derive(Debug, Clone, Serialize, )]
-pub struct FoodItem {
-    pub name: &'static str,
-    pub description: &'static str,
-    pub author: &'static str,
-    pub ingredients: &'static str,
-    pub instructions: &'static str,
-    pub difficulty: &'static str,
-    pub img_url: &'static str,
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub struct FoodItem<'a> {
+    pub name: &'a str,
+    pub description: &'a str,
+    pub author: &'a str,
+    pub ingredients: &'a str,
+    pub instructions: &'a str,
+    pub difficulty: &'a str,
+    pub img_url: &'a str,
     pub servings: u16,
     pub kcal: u16,
     pub fat: u16,
@@ -29,12 +28,12 @@ pub struct FoodItem {
 }
 
 #[derive(Debug, Serialize)]
-pub struct DayOfMeals{
-    pub day: Vec<&'static FoodItem>
+pub struct DayOfMeals<'a> {
+    pub day: Vec<FoodItem<'a>>,
 }
 #[derive(Debug, Serialize)]
-pub struct FinalMealPlan{
-    pub plan: Vec<DayOfMeals>,
+pub struct FinalMealPlan<'a> {
+    pub plan: Vec<DayOfMeals<'a>>,
 }
 pub struct Arguments {
     pub kcal_lower_bound: u16,
@@ -43,28 +42,28 @@ pub struct Arguments {
     pub total_days: usize,
 }
 
-pub fn generate_random_combination(
-    rng: &Rng,
-    nutrients: &'static [FoodItem],
+pub fn generate_random_combination<'a, 'b: 'a>(
+    rng: &'a Rng,
+    nutrients: &'a [FoodItem<'b>],
     amount: usize,
-) -> Vec<&'static FoodItem> {
-    let mut combination: Vec<&'static FoodItem> = vec![];
+) -> Vec<FoodItem<'b>> {
+    let mut combination: Vec<FoodItem<'_>> = vec![];
 
     // create combination
     for _ in 0..amount {
         let i: usize = rng.usize(..nutrients.len());
-        combination.push(&nutrients[i]);
+        combination.push(nutrients[i]);
     }
 
     combination
 }
 
 // TODO: possibly rewrite this function recursively?
-pub fn match_bounds(
-    nutrients: &'static [FoodItem],
+pub fn match_bounds<'a, 'b: 'a>(
+    nutrients: &'a [FoodItem<'b>],
     arguments: Arguments,
-) -> Result<Vec<Vec<&'static FoodItem>>, &str> {
-    let mut matched_list: Vec<Vec<&'static FoodItem>> = vec![];
+) -> Result<Vec<Vec<FoodItem<'b>>>, &'static str> {
+    let mut matched_list: Vec<Vec<FoodItem<'_>>> = vec![];
     let mut seen: HashSet<&str> = HashSet::new();
 
     #[cfg(target_arch = "wasm32")]
@@ -102,14 +101,9 @@ pub fn match_bounds(
     Err("Could not create satisfactory meal plan. Maybe tweak the parameters?")
 }
 
-/*
-pub fn to_json(final_meal_plan: FinalMealPlan) -> String {
-    use miniserde::json::*;
-    to_string(&final_meal_plan)
-}
-
+#[wasm_bindgen]
 pub fn match_bounds_json(
-    json_data_set: &str,
+    json_data_set: String,
     kcal_lower_bound: u16,
     kcal_upper_bound: u16,
     daily_meals: usize,
@@ -121,9 +115,6 @@ pub fn match_bounds_json(
         daily_meals,
         total_days,
     };
-    let data_set: Vec<FoodItem> = from_str(json_data_set).unwrap();
-    let nutrient_vec = match_bounds(&data_set, arguments).unwrap();
-    miniserde::json::to_string(&nutrient_vec)
+    let data_set: Vec<FoodItem<'_>> = serde_json::from_str(&json_data_set).unwrap();
+    serde_json::to_string(&match_bounds(&data_set, arguments).unwrap()).unwrap()
 }
-
-*/

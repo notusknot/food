@@ -3,8 +3,8 @@ pub mod lib;
 
 use data::*;
 use lib::*;
-use std::process;
 use std::fmt;
+use std::process;
 
 const HELP: &str = "\
 food: generate unique meal plans to fit your needs
@@ -47,11 +47,15 @@ fn main() {
         }
     };
 
-    let final_meal_plan = FinalMealPlan{ plan: meal_plan.into_iter().map(|day| DayOfMeals{ day }).collect()};
+    let final_meal_plan = FinalMealPlan {
+        plan: meal_plan
+            .into_iter()
+            .map(|day| DayOfMeals { day })
+            .collect(),
+    };
 
     println!("{}", final_meal_plan);
 }
-
 
 impl Arguments {
     fn parse_args() -> Result<Arguments, pico_args::Error> {
@@ -89,7 +93,7 @@ impl Arguments {
     }
 }
 
-impl fmt::Display for FoodItem {
+impl fmt::Display for FoodItem<'_> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Customize so what's needed is printed
         write!(f, "name: {}, \ningredients: {}, \ninstructions: {}, \nservings: {}, \nkcal: {}, \nfat: {}, \ncarbs: {}, \nprotein: {}\n", 
@@ -97,8 +101,7 @@ impl fmt::Display for FoodItem {
     }
 }
 
-
-impl fmt::Display for DayOfMeals {
+impl fmt::Display for DayOfMeals<'_> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.day.iter().fold(Ok(()), |result, food| {
             result.and_then(|_| writeln!(f, "{}", food))
@@ -106,8 +109,7 @@ impl fmt::Display for DayOfMeals {
     }
 }
 
-
-impl fmt::Display for FinalMealPlan {
+impl fmt::Display for FinalMealPlan<'_> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.plan.iter().fold(Ok(()), |result, food| {
             result.and_then(|_| {
@@ -120,4 +122,3 @@ impl fmt::Display for FinalMealPlan {
         })
     }
 }
-

@@ -1,5 +1,4 @@
 #![deny(unsafe_code)]
-#![deny(rust_2018_idioms)]
 use std::collections::HashSet;
 
 use fastrand::Rng;

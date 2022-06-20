@@ -43,8 +43,10 @@
           nativeBuildInputs = with pkgs; [
             hyperfine
             wasm-pack
+            nodePackages.npm
+            nodejs
              
-            (rust-bin.stable.latest.default.override { 
+            (rust-bin.nightly.latest.default.override { 
                 targets = [ "wasm32-unknown-unknown" ]; 
                 extensions = [ "rust-src" "clippy" "rustfmt" ];
             })

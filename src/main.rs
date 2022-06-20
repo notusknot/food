@@ -30,6 +30,7 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn main() {
     // parse args into Arguments struct or exit if there is an error
+    #[cfg(feature = "cli")]
     let arguments: Arguments = match Arguments::parse_args() {
         Ok(v) => v,
         Err(e) => {
@@ -39,6 +40,7 @@ fn main() {
         }
     };
 
+    #[cfg(feature = "cli")]
     let meal_plan = match match_bounds(NUTRIENTS, arguments) {
         Ok(meal_plan) => meal_plan,
         Err(error) => {
@@ -47,6 +49,7 @@ fn main() {
         }
     };
 
+    #[cfg(feature = "cli")]
     let final_meal_plan = FinalMealPlan {
         plan: meal_plan
             .into_iter()
@@ -54,9 +57,11 @@ fn main() {
             .collect(),
     };
 
+    #[cfg(feature = "cli")]
     println!("{}", final_meal_plan);
 }
 
+#[cfg(feature = "cli")]
 impl Arguments {
     fn parse_args() -> Result<Arguments, pico_args::Error> {
         let mut pargs = pico_args::Arguments::from_env();

@@ -1,7 +1,6 @@
 #![deny(unsafe_code)]
 use std::collections::HashSet;
 
-use fastrand::Rng;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
@@ -28,7 +27,7 @@ pub struct FoodItem<'a> {
 
 #[derive(Debug, Serialize)]
 pub struct DayOfMeals<'a> {
-    pub day: Vec<FoodItem<'a>>,
+    pub day: Vec<&'a FoodItem<'a>>,
 }
 #[derive(Debug, Serialize)]
 pub struct FinalMealPlan<'a> {
@@ -41,6 +40,7 @@ pub struct Arguments {
     pub total_days: usize,
 }
 
+/*
 pub fn generate_random_combination<'a, 'b: 'a>(
     rng: &'a Rng,
     nutrients: &'a [FoodItem<'b>],
@@ -56,13 +56,14 @@ pub fn generate_random_combination<'a, 'b: 'a>(
 
     combination
 }
+*/
 
 // TODO: possibly rewrite this function recursively?
 pub fn match_bounds<'a, 'b: 'a>(
     nutrients: &'a [FoodItem<'b>],
     arguments: Arguments,
-) -> Result<Vec<Vec<FoodItem<'b>>>, &'static str> {
-    let mut matched_list: Vec<Vec<FoodItem<'_>>> = vec![];
+) -> Result<Vec<Vec<&'a FoodItem<'b>>>, &'static str> {
+    let mut matched_list: Vec<Vec<&FoodItem<'_>>> = vec![];
     let mut seen: HashSet<&str> = HashSet::new();
 
     #[cfg(target_arch = "wasm32")]
@@ -70,11 +71,16 @@ pub fn match_bounds<'a, 'b: 'a>(
 
     // max amount of tries to prevent the program from running endlessly
     const TRIES: usize = 100_000;
-    let rng = fastrand::Rng::new();
+    //let rng = fastrand::Rng::new();
 
     // iterates through each combination of meals
     for _ in 0..TRIES {
-        let combination = generate_random_combination(&rng, nutrients, arguments.daily_meals);
+        //let combination = generate_random_combination(&rng, nutrients, arguments.daily_meals);
+
+        use rand::seq::SliceRandom as _;
+        let combination: Vec<_> = nutrients
+            .choose_multiple(&mut rand::thread_rng(), arguments.daily_meals)
+            .collect();
 
         // checks if combination fits within calorie range
         let sum: u16 = combination.iter().map(|i| i.kcal).sum();
@@ -116,4 +122,9 @@ pub fn match_bounds_json(
     };
     let data_set: Vec<FoodItem<'_>> = serde_json::from_str(&json_data_set).unwrap();
     serde_json::to_string(&match_bounds(&data_set, arguments).unwrap()).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
 }

@@ -4,12 +4,38 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <title>food</title>
     
-    <script type="module" crossorigin src="/food/assets/index.2e59bb0b.js"></script>
+    <script type="module" crossorigin src="/food/assets/index.3c7c8743.js"></script>
   </head>
-  <body>
+  <body class="wrapper">
     <h1>Meal generator</h1>
-    <p>Generates a 7-day meal plan, 3 meals per day, between 1800 and 1900 calories</p>
+    <p>Input your parameters and a new meal plan will be generated each time!</p>
+    <div class="inputBoxes">
+      <input type="number" id="kcal_lb" placeholder="Minimum calories">
+      <input type="number" id="kcal_ub" placeholder="Maximum calories">
+      <input type="number" id="daily_meals" placeholder="Meals per day">
+      <input type="number" id="total_days" placeholder="Total days">
+      <button id="gen_btn" type="button">Generate meal plan</button>
+    </div>
+    
   </body>
+  <style>
+    .wrapper {
+      display: grid;
+      grid-template-columns:
+        1fr
+        min(85ch, 100%)
+        1fr;
+    }
+    .wrapper > * {
+      grid-column: 2;
+    }
+    .full-bleed {
+      width: 100%;
+      grid-column: 1 / 4;
+    }
+
+  </style>
 </html>

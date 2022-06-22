@@ -60,7 +60,7 @@ impl fmt::Display for FinalMealPlan<'_> {
             result.and_then(|_| {
                 writeln!(
                     f,
-                    "New Day:\n────────────────────────────────────────────\n{}",
+                    "New Day:\n──────────────────────────────────────────\n{}",
                     food
                 )
             })

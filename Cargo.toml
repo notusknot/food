@@ -1,38 +1,21 @@
-[package]
-name = "food"
-version = "0.1.0"
-edition = "2021"
-license = "GPL-3.0-only"
-description = "Library and CLI for creating meal plans"
-homepage = "https://github.com/notusknot/food"
-repository = "https://github.com/notusknot/food"
-readme = "./README.md"
+[workspace]
 
-[dependencies]
-getrandom = { version = "0.2", features = ["js"] }
-rand = { version = "0.8.5" }
-pico-args = { version = "0.5.0", optional = true }
-serde = { version = "1.0.137", features = ["derive"], optional = true }
-serde_json = { version = "1.0", optional = true }
-wasm-bindgen = { version = "0.2.81", optional = true }
-console_error_panic_hook = { version = "0.1.7", optional = true }
+members = [
+    "cli",
+    "lib",
+    "web"
+]
 
-[features]
-cli = [ "pico-args" ]
-web = [ "serde", "serde_json", "wasm-bindgen", "console_error_panic_hook" ]
-default = [ "cli", "web" ]
-
-[lib]
-crate-type = ["cdylib"]
-name = "food"
-path = "src/lib.rs"
-
-[[bin]]
-name = "food"
-path = "src/main.rs"
-
-[profile.release]
+[profile.release.package.food-web]
 strip = true  # Automatically strip symbols from the binary.
-lto = true
 codegen-units = 1
-opt-level = 'z'
+opt-level = "z"
+
+[profile.release.package.food-cli]
+strip = true
+codegen-units = 1
+opt-level = 3
+
+[profile.release.package.food-lib]
+strip = true
+codegen-units = 1

@@ -3,5 +3,5 @@
 /.envrc
 /.direnv
 /.DS_Store
-/pkg/node_modules/
-/pkg/dist/
+/web/node_modules/
+/web/pkg/

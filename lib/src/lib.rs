@@ -38,7 +38,7 @@ impl fmt::Display for FoodItem<'_> {
 
 #[derive(Debug)]
 pub struct DayOfMeals<'a> {
-    pub day: Vec<&'a FoodItem<'a>>,
+    pub day: Vec<FoodItem<'a>>,
 }
 
 impl fmt::Display for DayOfMeals<'_> {
@@ -116,6 +116,25 @@ impl CliArgs {
     }
 }
 
+pub fn random_combination<'a, 'b: 'a>(
+    nutrients: &'a [FoodItem<'b>],
+    amount: usize,
+) -> Vec<FoodItem<'b>> {
+    let mut combination: Vec<FoodItem<'_>> = vec![];
+
+    use nanorand::{RNG, WyRand};
+    let mut rng = WyRand::new();
+
+    // create combination
+    for _ in 0..amount {
+        let i: usize = rng.generate_range(1_usize, nutrients.len());
+        combination.push(nutrients[i]);
+    }
+
+    combination
+}
+
+
 /*
 TODO: possibly rewrite this function recursively?
 This is the main function that actually creates the meal plan.
@@ -123,8 +142,8 @@ This is the main function that actually creates the meal plan.
 pub fn match_bounds<'a, 'b: 'a>(
     nutrients: &'a [FoodItem<'b>],
     arguments: CliArgs,
-) -> Result<Vec<Vec<&'a FoodItem<'b>>>, &'static str> {
-    let mut matched_list: Vec<Vec<&FoodItem<'_>>> = vec![];
+) -> Result<Vec<Vec<FoodItem<'b>>>, &'static str> {
+    let mut matched_list: Vec<Vec<FoodItem<'_>>> = vec![];
     let mut seen: HashSet<&str> = HashSet::new();
 
     // max amount of tries to prevent the program from running endlessly
@@ -132,10 +151,7 @@ pub fn match_bounds<'a, 'b: 'a>(
 
     // iterates through each combination of meals
     for _ in 0..TRIES {
-        use rand::seq::SliceRandom as _;
-        let combination: Vec<_> = nutrients
-            .choose_multiple(&mut rand::thread_rng(), arguments.daily_meals)
-            .collect();
+        let combination = random_combination(nutrients, arguments.daily_meals);
 
         // checks if combination fits within calorie range
         let sum: u16 = combination.iter().map(|i| i.kcal).sum();

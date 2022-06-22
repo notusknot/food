@@ -9,5 +9,5 @@ repository = "https://github.com/notusknot/food"
 readme = "../README.md"
 
 [dependencies]
-rand = { version = "0.8.5" }
+nanorand = { version = "0.5.2", features = ["getrandom"] }
 pico-args = { version = "0.5.0" }

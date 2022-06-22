@@ -3,7 +3,7 @@
 members = [
     "cli",
     "lib",
-    "web"
+    "web/food-web/"
 ]
 
 [profile.release.package.food-web]

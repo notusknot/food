@@ -34,7 +34,8 @@ pub fn match_bounds_js(
             .collect(),
     };
 
-    let val = document.create_element("div")?;
+    let body = document.body().expect("document should have a body");
+    let val = document.create_element("pre")?;
     val.set_text_content(Some(&format!("{}", result)));
 
     body.append_child(&val)?;

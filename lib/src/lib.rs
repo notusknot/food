@@ -122,7 +122,7 @@ pub fn random_combination<'a, 'b: 'a>(
 ) -> Vec<FoodItem<'b>> {
     let mut combination: Vec<FoodItem<'_>> = vec![];
 
-    use nanorand::{RNG, WyRand};
+    use nanorand::{WyRand, RNG};
     let mut rng = WyRand::new();
 
     // create combination
@@ -133,7 +133,6 @@ pub fn random_combination<'a, 'b: 'a>(
 
     combination
 }
-
 
 /*
 TODO: possibly rewrite this function recursively?

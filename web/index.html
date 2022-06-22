@@ -8,18 +8,19 @@
     <title>food</title>
     
   </head>
-  <body class="wrapper">
-    <h1>Meal generator</h1>
-    <p>Input your parameters and a new meal plan will be generated each time!</p>
-    <div class="inputBoxes">
-      <input type="number" id="kcal_lb" placeholder="Minimum calories">
-      <input type="number" id="kcal_ub" placeholder="Maximum calories">
-      <input type="number" id="daily_meals" placeholder="Meals per day">
-      <input type="number" id="total_days" placeholder="Total days">
-      <button id="gen_btn" type="button">Generate meal plan</button>
-    </div>
-    
-  </body>
+    <body class="wrapper">
+      <h1>Meal generator</h1>
+      <p>Input your parameters and a new meal plan will be generated each time!</p>
+      <div class="inputBoxes">
+        <input type="number" id="kcal_lb" placeholder="Minimum calories">
+        <input type="number" id="kcal_ub" placeholder="Maximum calories">
+        <input type="number" id="daily_meals" placeholder="Meals per day">
+        <input type="number" id="total_days" placeholder="Total days">
+        <button id="gen_btn" type="button">Generate meal plan</button>
+      </div>
+      
+    </body>
+  
   <style>
     .wrapper {
       display: grid;
@@ -36,5 +37,16 @@
       grid-column: 1 / 4;
     }
 
+    pre {
+      word-wrap: break-word;
+      word-break: break-all;
+      max-width: 85ch;
+      overflow-x: auto;
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+    }
   </style>
 </html>
